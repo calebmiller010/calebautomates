@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caleb Automates — Business Automation That Runs Itself</title>
+<meta name="description" content="I build custom automations for small businesses — systems that eliminate manual work and run on their own. Based in Kansas City.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300..600&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ──────────────────────────────────────────────── */
+:root,[data-theme="light"]{
+  --color-bg:#f7f6f2;
+  --color-surface:#f9f8f5;
+  --color-surface-2:#fbfbf9;
+  --color-surface-offset:#edeae5;
+  --color-border:rgba(40,37,29,0.10);
+  --color-divider:#dcd9d5;
+  --color-text:#28251d;
+  --color-text-muted:#7a7974;
+  --color-text-faint:#bab9b4;
+  --color-text-inverse:#f9f8f4;
+  --color-primary:#01696f;
+  --color-primary-hover:#0c4e54;
+  --color-primary-highlight:#cedcd8;
+  --shadow-sm:0 1px 3px rgba(40,37,29,.07);
+  --shadow-md:0 4px 16px rgba(40,37,29,.09);
+  --shadow-lg:0 12px 40px rgba(40,37,29,.13);
+  --radius-sm:.375rem;
+  --radius-md:.5rem;
+  --radius-lg:.75rem;
+  --radius-xl:1rem;
+  --radius-full:9999px;
+  --font-display:'Instrument Serif',Georgia,serif;
+  --font-body:'DM Sans','Helvetica Neue',sans-serif;
+  --text-xs:clamp(.75rem,.7rem + .25vw,.875rem);
+  --text-sm:clamp(.875rem,.8rem + .35vw,1rem);
+  --text-base:clamp(1rem,.95rem + .25vw,1.125rem);
+  --text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);
+  --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+  --text-2xl:clamp(2rem,1.2rem + 2.5vw,3.5rem);
+  --text-hero:clamp(2.8rem,.5rem + 6vw,5.5rem);
+  --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;
+  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
+  --space-12:3rem;--space-16:4rem;--space-20:5rem;--space-24:6rem;
+  --content-default:960px;--content-wide:1160px;
+  --transition:180ms cubic-bezier(.16,1,.3,1);
+}
+[data-theme="dark"]{
+  --color-bg:#171614;
+  --color-surface:#1c1b19;
+  --color-surface-2:#201f1d;
+  --color-surface-offset:#22211f;
+  --color-border:rgba(205,204,202,.10);
+  --color-divider:#262523;
+  --color-text:#cdccca;
+  --color-text-muted:#797876;
+  --color-text-faint:#5a5957;
+  --color-text-inverse:#2b2a28;
+  --color-primary:#4f98a3;
+  --color-primary-hover:#227f8b;
+  --color-primary-highlight:#313b3b;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.25);
+  --shadow-md:0 4px 16px rgba(0,0,0,.35);
+  --shadow-lg:0 12px 40px rgba(0,0,0,.45);
+}
+
+/* ── RESET & BASE ───────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;scroll-padding-top:80px}
+body{min-height:100dvh;font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text);background:var(--color-bg);line-height:1.65;transition:background var(--transition),color var(--transition)}
+img{display:block;max-width:100%;height:auto}
+ul[role="list"]{list-style:none}
+a,button,[role="button"]{transition:color var(--transition),background var(--transition),border-color var(--transition),box-shadow var(--transition),opacity var(--transition)}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
+h1,h2,h3,h4{text-wrap:balance;line-height:1.15}
+p,li{text-wrap:pretty;max-width:68ch}
+::selection{background:color-mix(in oklch,var(--color-primary) 20%,transparent);color:var(--color-text)}
+:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm)}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ── LAYOUT UTILS ───────────────────────────────────────── */
+.container{max-width:var(--content-default);margin-inline:auto;padding-inline:clamp(var(--space-5),4vw,var(--space-10))}
+.container--wide{max-width:var(--content-wide)}
+section{padding-block:clamp(var(--space-12),7vw,var(--space-24))}
+
+/* ── NAV ────────────────────────────────────────────────── */
+nav{position:sticky;top:0;z-index:100;background:color-mix(in oklch,var(--color-bg) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--color-border)}
+.nav-inner{max-width:var(--content-wide);margin-inline:auto;padding-inline:clamp(var(--space-5),4vw,var(--space-10));height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--font-display);font-size:var(--text-lg);color:var(--color-text);text-decoration:none;display:flex;align-items:center;gap:var(--space-2)}
+.nav-logo svg{color:var(--color-primary)}
+.nav-links{display:flex;align-items:center;gap:var(--space-6)}
+.nav-links a{font-size:var(--text-sm);color:var(--color-text-muted);text-decoration:none;font-weight:500}
+.nav-links a:hover{color:var(--color-text)}
+.nav-cta{font-size:var(--text-sm);font-weight:600;color:var(--color-text-inverse)!important;background:var(--color-primary);padding:var(--space-2) var(--space-5);border-radius:var(--radius-full);text-decoration:none}
+.nav-cta:hover{background:var(--color-primary-hover)!important;color:var(--color-text-inverse)!important}
+.theme-toggle{width:36px;height:36px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);border:1px solid var(--color-border)}
+.theme-toggle:hover{color:var(--color-text);border-color:var(--color-text-muted)}
+@media(max-width:640px){.nav-links .hide-mobile{display:none}}
+
+/* ── HERO ────────────────────────────────────────────────── */
+#hero{padding-block:clamp(var(--space-16),9vw,var(--space-24)) clamp(var(--space-12),6vw,var(--space-20));border-bottom:1px solid var(--color-border)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:var(--space-2);font-size:var(--text-xs);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--color-primary);background:var(--color-primary-highlight);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);margin-bottom:var(--space-5)}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--color-primary)}
+h1.hero-title{font-family:var(--font-display);font-size:var(--text-hero);color:var(--color-text);margin-bottom:var(--space-6);max-width:18ch;font-weight:400}
+h1.hero-title em{font-style:italic;color:var(--color-primary)}
+.hero-sub{font-size:var(--text-lg);color:var(--color-text-muted);max-width:52ch;margin-bottom:var(--space-8);line-height:1.6;font-weight:400}
+.hero-actions{display:flex;gap:var(--space-4);flex-wrap:wrap;align-items:center}
+.btn-primary{display:inline-flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);font-weight:600;color:var(--color-text-inverse);background:var(--color-primary);padding:var(--space-3) var(--space-6);border-radius:var(--radius-full);text-decoration:none;border:none}
+.btn-primary:hover{background:var(--color-primary-hover);color:var(--color-text-inverse);box-shadow:var(--shadow-md)}
+.btn-ghost{display:inline-flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);font-weight:500;color:var(--color-text-muted);text-decoration:none;padding:var(--space-3) var(--space-4)}
+.btn-ghost:hover{color:var(--color-text)}
+.hero-proof{margin-top:var(--space-12);display:flex;gap:clamp(var(--space-8),4vw,var(--space-16));flex-wrap:wrap}
+.proof-stat{}
+.proof-number{font-family:var(--font-display);font-size:var(--text-xl);color:var(--color-text)}
+.proof-label{font-size:var(--text-xs);color:var(--color-text-muted);margin-top:2px;text-transform:uppercase;letter-spacing:.06em;font-weight:500}
+
+/* ── PROBLEM ─────────────────────────────────────────────── */
+#problem{background:var(--color-surface)}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(var(--space-8),5vw,var(--space-16));align-items:center}
+.problem-label{font-size:var(--text-xs);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-faint);margin-bottom:var(--space-4)}
+h2.section-title{font-family:var(--font-display);font-size:var(--text-2xl);font-weight:400;color:var(--color-text);margin-bottom:var(--space-6)}
+h2.section-title em{font-style:italic;color:var(--color-primary)}
+.pain-list{list-style:none;display:flex;flex-direction:column;gap:var(--space-4)}
+.pain-item{display:flex;align-items:flex-start;gap:var(--space-3);font-size:var(--text-base);color:var(--color-text-muted)}
+.pain-item::before{content:'';width:20px;height:20px;flex-shrink:0;border-radius:50%;background:color-mix(in oklch,var(--color-text-faint) 20%,var(--color-surface-offset));display:flex;align-items:center;justify-content:center;margin-top:2px}
+.pain-dot{width:20px;height:20px;flex-shrink:0;border-radius:50%;border:1.5px solid var(--color-border);display:flex;align-items:center;justify-content:center;margin-top:3px;color:var(--color-text-faint)}
+@media(max-width:680px){.problem-grid{grid-template-columns:1fr}}
+
+/* ── WHAT I BUILD ─────────────────────────────────────────── */
+#services{}
+.services-header{text-align:left;max-width:52ch;margin-bottom:clamp(var(--space-8),4vw,var(--space-12))}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(280px,100%),1fr));gap:var(--space-5)}
+.service-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-6);display:flex;flex-direction:column;gap:var(--space-3)}
+.service-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.service-icon{width:40px;height:40px;border-radius:var(--radius-md);background:var(--color-primary-highlight);display:flex;align-items:center;justify-content:center;color:var(--color-primary)}
+.service-title{font-size:var(--text-base);font-weight:600;color:var(--color-text)}
+.service-desc{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6}
+.service-examples{margin-top:auto;padding-top:var(--space-3);border-top:1px solid var(--color-border);font-size:var(--text-xs);color:var(--color-text-faint);line-height:1.6}
+
+/* ── CASE STUDY ──────────────────────────────────────────── */
+#case-study{background:var(--color-surface)}
+.case-study-card{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-sm)}
+.case-study-header{padding:clamp(var(--space-8),4vw,var(--space-12));border-bottom:1px solid var(--color-border)}
+.case-badge{display:inline-flex;align-items:center;gap:var(--space-2);font-size:var(--text-xs);font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--color-primary);background:var(--color-primary-highlight);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);margin-bottom:var(--space-4)}
+.case-study-title{font-family:var(--font-display);font-size:var(--text-xl);font-weight:400;color:var(--color-text);margin-bottom:var(--space-3)}
+.case-study-sub{font-size:var(--text-base);color:var(--color-text-muted);max-width:60ch}
+.case-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-1);background:var(--color-surface-offset);border-bottom:1px solid var(--color-border)}
+.metric-box{padding:var(--space-6) var(--space-5);text-align:center;background:var(--color-surface)}
+.metric-box:not(:last-child){border-right:1px solid var(--color-border)}
+.metric-number{font-family:var(--font-display);font-size:var(--text-xl);color:var(--color-text);display:block}
+.metric-label{font-size:var(--text-xs);color:var(--color-text-muted);text-transform:uppercase;letter-spacing:.06em;font-weight:500;margin-top:4px;display:block}
+.case-body{padding:clamp(var(--space-8),4vw,var(--space-12));display:grid;grid-template-columns:1fr 1fr;gap:clamp(var(--space-8),5vw,var(--space-12))}
+.case-section-label{font-size:var(--text-xs);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-faint);margin-bottom:var(--space-4)}
+.case-pipeline{display:flex;flex-direction:column;gap:var(--space-3)}
+.pipeline-step{display:flex;align-items:flex-start;gap:var(--space-3)}
+.step-num{width:24px;height:24px;border-radius:50%;background:var(--color-primary);color:var(--color-text-inverse);font-size:var(--text-xs);font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-text{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6}
+.step-text strong{color:var(--color-text);font-weight:600}
+.tech-tags{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-2)}
+.tech-tag{font-size:var(--text-xs);font-weight:500;color:var(--color-text-muted);background:var(--color-surface-offset);padding:3px var(--space-3);border-radius:var(--radius-full);border:1px solid var(--color-border)}
+@media(max-width:680px){.case-metrics{grid-template-columns:1fr 1fr}.case-metrics .metric-box:nth-child(3){border-right:none;grid-column:1/-1}.case-body{grid-template-columns:1fr}}
+
+/* ── EXPERIENCE ──────────────────────────────────────────── */
+#experience{background:var(--color-bg)}
+.experience-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(var(--space-10),6vw,var(--space-20));align-items:start}
+.experience-body p{font-size:var(--text-base);color:var(--color-text-muted);margin-bottom:var(--space-4);line-height:1.7}
+.experience-body p:last-child{margin-bottom:0}
+.experience-body strong{color:var(--color-text);font-weight:600}
+.means-card{background:var(--color-primary-highlight);border-left:3px solid var(--color-primary);border-radius:var(--radius-xl);padding:var(--space-6)}
+.means-title{font-size:var(--text-sm);font-weight:700;color:var(--color-primary);text-transform:uppercase;letter-spacing:.07em;margin-bottom:var(--space-5)}
+.means-list{list-style:none}
+.means-item{display:flex;gap:var(--space-3);align-items:flex-start;font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6;margin-bottom:var(--space-3)}
+.means-item:last-child{margin-bottom:0}
+@media(max-width:680px){.experience-grid{grid-template-columns:1fr}}
+
+/* ── PROCESS ──────────────────────────────────────────────── */
+#process{}
+.process-steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:var(--space-5);margin-top:clamp(var(--space-8),4vw,var(--space-12))}
+.process-step{position:relative;padding:var(--space-6);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl)}
+.process-num{font-family:var(--font-display);font-size:var(--text-2xl);color:var(--color-primary-highlight);font-style:italic;margin-bottom:var(--space-3);line-height:1}
+.process-step-title{font-size:var(--text-base);font-weight:600;color:var(--color-text);margin-bottom:var(--space-2)}
+.process-step-desc{font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6}
+
+/* ── ABOUT ──────────────────────────────────────────────── */
+#about{background:var(--color-surface)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(var(--space-10),6vw,var(--space-20));align-items:center}
+.about-body p{font-size:var(--text-base);color:var(--color-text-muted);margin-bottom:var(--space-4);line-height:1.7}
+.about-body p:last-child{margin-bottom:0}
+.about-body strong{color:var(--color-text);font-weight:600}
+.credentials{display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--space-6)}
+.credential{display:flex;align-items:center;gap:var(--space-3);font-size:var(--text-sm);color:var(--color-text-muted)}
+.credential-dot{width:8px;height:8px;border-radius:50%;background:var(--color-primary);flex-shrink:0}
+.about-visual{background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-6);display:flex;flex-direction:column;gap:var(--space-4)}
+.stack-label{font-size:var(--text-xs);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-faint)}
+.stack-row{display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.stack-chip{font-size:var(--text-xs);font-weight:500;color:var(--color-primary);background:var(--color-primary-highlight);padding:4px var(--space-3);border-radius:var(--radius-full)}
+@media(max-width:680px){.about-grid{grid-template-columns:1fr}}
+
+/* ── CTA ───────────────────────────────────────────────────── */
+#contact{background:var(--color-text);color:var(--color-text-inverse)}
+#contact .container{display:grid;grid-template-columns:1fr 1.25fr;gap:clamp(var(--space-8),4vw,var(--space-16));align-items:start}
+.cta-headline{font-family:var(--font-display);font-size:var(--text-2xl);font-weight:400;color:var(--color-text-inverse);margin-bottom:var(--space-4)}
+.cta-headline em{font-style:italic;color:#4f98a3}
+.cta-sub{font-size:var(--text-base);color:rgba(205,204,202,.7);max-width:44ch;line-height:1.7}
+.contact-form{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-xl);padding:var(--space-6);display:flex;flex-direction:column;gap:var(--space-4)}
+.form-group{display:flex;flex-direction:column;gap:var(--space-2)}
+.form-label{font-size:var(--text-xs);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(205,204,202,.6)}
+.form-input,.form-textarea{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);font-size:var(--text-sm);color:var(--color-text-inverse);font-family:var(--font-body);resize:vertical;transition:border-color var(--transition)}
+.form-input::placeholder,.form-textarea::placeholder{color:rgba(205,204,202,.35)}
+.form-input:focus,.form-textarea:focus{outline:none;border-color:#4f98a3}
+.form-textarea{min-height:100px}
+.form-submit{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);font-size:var(--text-sm);font-weight:600;color:#171614;background:#4f98a3;padding:var(--space-3) var(--space-6);border-radius:var(--radius-full);border:none;cursor:pointer;font-family:var(--font-body);transition:background var(--transition)}
+.form-submit:hover{background:#227f8b}
+.form-note{font-size:var(--text-xs);color:rgba(205,204,202,.4);text-align:center}
+@media(max-width:720px){#contact .container{grid-template-columns:1fr}}
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+footer{padding-block:var(--space-8);border-top:1px solid var(--color-border)}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-4)}
+.footer-logo{font-family:var(--font-display);font-size:var(--text-base);color:var(--color-text-muted)}
+.footer-copy{font-size:var(--text-xs);color:var(--color-text-faint)}
+
+/* ── ANIMATIONS ──────────────────────────────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{opacity:0;animation:fadeUp .6s cubic-bezier(.16,1,.3,1) forwards}
+.fade-up-1{animation-delay:.05s}
+.fade-up-2{animation-delay:.15s}
+.fade-up-3{animation-delay:.25s}
+.fade-up-4{animation-delay:.35s}
+.fade-up-5{animation-delay:.45s}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <rect x="2" y="2" width="8" height="8" rx="2" fill="currentColor" opacity=".9"/>
+        <rect x="12" y="2" width="8" height="8" rx="2" fill="currentColor" opacity=".4"/>
+        <rect x="2" y="12" width="8" height="8" rx="2" fill="currentColor" opacity=".4"/>
+        <rect x="12" y="12" width="8" height="8" rx="2" fill="currentColor" opacity=".7"/>
+      </svg>
+      Caleb Automates
+    </a>
+    <div class="nav-links">
+      <a href="#services" class="hide-mobile">What I Build</a>
+      <a href="#case-study" class="hide-mobile">Case Study</a>
+      <a href="#about" class="hide-mobile">About</a>
+      <button class="theme-toggle" aria-label="Switch to dark mode" data-theme-toggle>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+      <a href="#contact" class="nav-cta">Get in Touch</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-eyebrow fade-up fade-up-1">AI Automation</div>
+    <h1 class="hero-title fade-up fade-up-2">Your busywork,<br><em>automated.</em></h1>
+    <p class="hero-sub fade-up fade-up-3">I build custom systems that eliminate repetitive manual work for small businesses — automations that run on their own, so you can focus on what actually moves the needle.</p>
+    <div class="hero-actions fade-up fade-up-4">
+      <a href="#contact" class="btn-primary">
+        Tell me what you're doing manually
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#case-study" class="btn-ghost">See real results ↓</a>
+    </div>
+    <div class="hero-proof fade-up fade-up-5">
+      <div class="proof-stat">
+        <div class="proof-number">0 hrs</div>
+        <div class="proof-label">Manual work replaced per week</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-number">40+</div>
+        <div class="proof-label">Active users on one system</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-number">~1 hr</div>
+        <div class="proof-label">Monthly maintenance required</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="problem-grid">
+      <div>
+        <div class="problem-label">Sound familiar?</div>
+        <h2 class="section-title">You're running the business.<br>The business is <em>running you.</em></h2>
+        <p style="font-size:var(--text-base);color:var(--color-text-muted);line-height:1.7;max-width:46ch">Every week there are tasks that eat hours — not because they're complex, but because no one ever automated them. That's fixable.</p>
+      </div>
+      <ul class="pain-list" role="list">
+        <li class="pain-item">
+          <span class="pain-dot">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          </span>
+          Copying data between apps by hand every day
+        </li>
+        <li class="pain-item">
+          <span class="pain-dot">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          </span>
+          Sending the same follow-up emails manually each week
+        </li>
+        <li class="pain-item">
+          <span class="pain-dot">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          </span>
+          Generating the same reports from the same spreadsheets
+        </li>
+        <li class="pain-item">
+          <span class="pain-dot">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          </span>
+          Manually routing inbound leads or requests to the right person
+        </li>
+        <li class="pain-item">
+          <span class="pain-dot">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="3"/></svg>
+          </span>
+          Chasing down documents, signatures, or status updates
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="services-header">
+      <div class="problem-label">What I Build</div>
+      <h2 class="section-title">Three types of systems.<br><em>One outcome: less manual work.</em></h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="service-title">Document & Content Pipelines</div>
+        <div class="service-desc">Raw input goes in — formatted, accurate output comes out automatically. No manual transcription, formatting, or distribution.</div>
+        <div class="service-examples">E.g. meeting notes → structured summaries → auto-emailed to your team. Or: audio/video → transcription → formatted report.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="service-title">Client Communication Automation</div>
+        <div class="service-desc">Follow-ups, onboarding sequences, status updates, and reminders — triggered automatically based on what's happening in your business.</div>
+        <div class="service-examples">E.g. new lead fills form → CRM updated → personalized follow-up sent → you're notified only if they reply.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="service-title">Internal Ops & Reporting</div>
+        <div class="service-desc">Data that lives in multiple places gets pulled together, processed, and delivered as a clean report — on schedule, every time.</div>
+        <div class="service-examples">E.g. weekly ops dashboard built automatically from your existing tools, delivered to your inbox every Monday morning.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY -->
+<section id="case-study">
+  <div class="container">
+    <div style="margin-bottom:clamp(var(--space-8),4vw,var(--space-12))">
+      <div class="problem-label">Proof of Work</div>
+      <h2 class="section-title" style="margin-bottom:0">A real system.<br><em>Running in production.</em></h2>
+    </div>
+    <div class="case-study-card">
+      <div class="case-study-header">
+        <div class="case-badge">Case Study</div>
+        <div class="case-study-title">Church Operations Automation Ecosystem</div>
+        <p class="case-study-sub">A 200+ member organization had staff spending hours each week manually transcribing sermons, distributing updates, and maintaining content. I built a fully autonomous pipeline that eliminated all of it.</p>
+      </div>
+      <div class="case-metrics">
+        <div class="metric-box">
+          <span class="metric-number">0 hrs</span>
+          <span class="metric-label">Manual work per week</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-number">40+</span>
+          <span class="metric-label">Subscribers in week 1</span>
+        </div>
+        <div class="metric-box">
+          <span class="metric-number">~1 hr</span>
+          <span class="metric-label">Monthly maintenance</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div>
+          <div class="case-section-label">What was built</div>
+          <div class="case-pipeline">
+            <div class="pipeline-step">
+              <div class="step-num">1</div>
+              <div class="step-text"><strong>Sermon Pipeline</strong> — MP3 uploaded to S3 → Whisper transcription runs automatically → LLM formats the transcript into a structured outline → Word + PDF documents generated → auto-emailed to staff. Zero manual typing.</div>
+            </div>
+            <div class="pipeline-step">
+              <div class="step-num">2</div>
+              <div class="step-text"><strong>Content Distribution</strong> — n8n polls YouTube for new uploads, categorizes content with an LLM, generates HTML email digests, and sends to 40+ segmented subscribers. A human-in-the-loop approval step lets me review before any send.</div>
+            </div>
+            <div class="pipeline-step">
+              <div class="step-num">3</div>
+              <div class="step-text"><strong>YouTube Auto-Updates</strong> — The pipeline parses Q&A questions from Bible study recordings and automatically updates video descriptions to be standardized and searchable. No manual edits needed.</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="case-section-label">Tech stack</div>
+          <div class="tech-tags">
+            <span class="tech-tag">AWS CDK</span>
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">n8n</span>
+            <span class="tech-tag">AWS Lambda</span>
+            <span class="tech-tag">AWS Batch</span>
+            <span class="tech-tag">Whisper</span>
+            <span class="tech-tag">LLM post-processing</span>
+            <span class="tech-tag">AppSmith</span>
+            <span class="tech-tag">S3</span>
+            <span class="tech-tag">AWS Lightsail</span>
+          </div>
+          <div style="margin-top:var(--space-6)">
+            <div class="case-section-label">The result</div>
+            <p style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">What previously consumed hours of staff time each week now runs entirely on its own. The system has been in production since January 2026 with zero downtime. It checks itself — I look at it about once a month.</p>
+          </div>
+          <div style="margin-top:var(--space-6)">
+            <div class="case-section-label">What this means for your business</div>
+            <p style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">If a volunteer project I built for free runs this reliably, imagine what I'd build when it's your livelihood on the line and we're aligned on outcomes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <div class="problem-label">8 Years of Production Systems</div>
+    <h2 class="section-title" style="margin-bottom:clamp(var(--space-8),4vw,var(--space-12))">I don't just know automation tools.<br><em>I know how businesses actually break.</em></h2>
+    <div class="experience-grid">
+      <div class="experience-body">
+        <p>For eight years I've built the backend systems that keep fintech and healthcare companies running — integrations processing millions of transactions, platforms handling a million API requests a day, and pipelines that turn weeks of manual work into hours.</p>
+        <p>One of the most consequential systems I built was an integration platform that eliminated a client onboarding bottleneck. Every new customer had a different file format, and mapping each one manually burned weeks of engineering time. The platform I built automated that mapping and was estimated to save around <strong>$10 million per year</strong> in lost velocity and manual labor.</p>
+        <p>I also built an internal AI tool that reads raw client specs and auto-generates configuration files — compressing a process that used to take days or weeks down to a single afternoon. That's not a demo. That's a tool engineers used every day to ship faster.</p>
+        <p>On the operations side, I cut a test suite runtime by 80% and query execution time by 60%. Boring optimizations to talk about, massive impact on the business. And I use the same AI-augmented workflow techniques on client work today — not because the problems are easier, but because the systems I build are designed better from the start.</p>
+      </div>
+      <div class="means-card">
+        <div class="means-title">What This Means For You</div>
+        <ul class="means-list" role="list">
+          <li class="means-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--color-primary);flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>I understand the operational pain behind the automation request — not just the technical implementation.</span>
+          </li>
+          <li class="means-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--color-primary);flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>I've built systems that handle millions of real transactions. Your workflow automation won't break.</span>
+          </li>
+          <li class="means-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--color-primary);flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>I know how to scope and deliver fast. The same AI-augmented approach I use professionally is what I bring to your project.</span>
+          </li>
+          <li class="means-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--color-primary);flex-shrink:0;margin-top:2px"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>I've worked directly with large business clients on technical problems. I speak business, not just code.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="container">
+    <div class="services-header">
+      <div class="problem-label">How It Works</div>
+      <h2 class="section-title">From problem to<br><em>running system</em> in days.</h2>
+    </div>
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="process-num">01</div>
+        <div class="process-step-title">You describe the pain</div>
+        <div class="process-step-desc">Tell me what you're doing manually and how often. A short conversation — no tech jargon required. I ask the questions.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">02</div>
+        <div class="process-step-title">I scope the solution</div>
+        <div class="process-step-desc">I map the automation, estimate build time, and give you a clear scope and price before anything is built. No surprises.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">03</div>
+        <div class="process-step-title">I build and test it</div>
+        <div class="process-step-desc">Most systems are built and running within a week. I test against real data and walk you through it before handoff.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">04</div>
+        <div class="process-step-title">It runs. You forget it exists.</div>
+        <div class="process-step-desc">That's the goal. The system works in the background. I'm available if something ever needs adjusting.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-body">
+        <div class="problem-label">About</div>
+        <h2 class="section-title">I build for outcomes,<br><em>not for show.</em></h2>
+        <p>I've spent nearly a decade building systems that keep real businesses running — fintech platforms, healthcare operations, and now custom automations for small businesses. The through-line isn't the technology. It's that every system had to work reliably, day after day, because real people depended on it.</p>
+        <p>I started using AI tools early because they let me deliver faster without cutting corners. A project that used to take weeks now takes days. That means you get a working system in your hands sooner, and we can refine it together based on how you actually use it.</p>
+        <p><strong>I'm not an agency.</strong> I'm one person who does the work. When you hire me, you talk to the builder. No handoffs, no junior developers, no surprises.</p>
+        <div class="credentials">
+          <div class="credential"><div class="credential-dot"></div>Production systems that run for months without babysitting</div>
+          <div class="credential"><div class="credential-dot"></div>Integrations that have saved businesses millions in operational costs</div>
+          <div class="credential"><div class="credential-dot"></div>You work directly with the person building it</div>
+          <div class="credential"><div class="credential-dot"></div>Kansas City-based · Available for remote projects</div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div style="font-size:var(--text-base);font-weight:600;color:var(--color-text);margin-bottom:var(--space-4)">What working with me looks like</div>
+        <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+          <div>
+            <div style="font-size:var(--text-sm);font-weight:600;color:var(--color-text);margin-bottom:2px">A working system in days</div>
+            <div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6">Most automations are built and running within a week. You'll see progress immediately, not after a month of meetings.</div>
+          </div>
+          <div style="border-top:1px solid var(--color-border);padding-top:var(--space-4)">
+            <div style="font-size:var(--text-sm);font-weight:600;color:var(--color-text);margin-bottom:2px">Built to run without you</div>
+            <div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6">I design systems that don't need daily attention. Set it up, let it run, and check in when you want to — not because you have to.</div>
+          </div>
+          <div style="border-top:1px solid var(--color-border);padding-top:var(--space-4)">
+            <div style="font-size:var(--text-sm);font-weight:600;color:var(--color-text);margin-bottom:2px">Clear communication, always</div>
+            <div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6">No jargon, no status reports that obscure reality. I'll tell you what's working, what's not, and what it takes to fix it.</div>
+          </div>
+          <div style="border-top:1px solid var(--color-border);padding-top:var(--space-4)">
+            <div style="font-size:var(--text-sm);font-weight:600;color:var(--color-text);margin-bottom:2px">No long-term contracts</div>
+            <div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6">You pay for the system, not a retainer. If something needs adjusting later, we'll handle it when it comes up.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div>
+      <h2 class="cta-headline">What are you doing<br>manually <em>right now?</em></h2>
+      <p class="cta-sub">Describe the repetitive task that's eating your time. I'll tell you honestly if it's automatable and what it would take to fix it.</p>
+      <div style="margin-top:var(--space-8);display:flex;flex-direction:column;gap:var(--space-3)">
+        <div style="display:flex;align-items:center;gap:var(--space-3);font-size:var(--text-sm);color:rgba(205,204,202,.6)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          No sales pitch. Just a conversation.
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-3);font-size:var(--text-sm);color:rgba(205,204,202,.6)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          I'll respond within 24 hours.
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-3);font-size:var(--text-sm);color:rgba(205,204,202,.6)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          If it's not a fit, I'll tell you that too.
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--color-surface);border-radius:var(--radius-xl);padding:var(--space-4);box-shadow:var(--shadow-lg)">
+      <iframe
+        data-tally-src="https://tally.so/r/Xx1aAO?alignLeft=1&hideTitle=1&transparentBackground=1"
+        loading="lazy"
+        width="100%"
+        height="520"
+        frameborder="0"
+        marginheight="0"
+        marginwidth="0"
+        scrolling="yes"
+        title="Contact form"
+        style="border-radius:var(--radius-sm);display:block"
+      ></iframe>
+    </div>
+  <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container footer-inner">
+    <div class="footer-logo">Caleb Automates</div>
+    <div class="footer-copy">© 2026 · Kansas City, KS · Built with the same tools I sell.</div>
+  </div>
+</footer>
+
+<script>
+// Theme toggle
+(function(){
+  const t=document.querySelector('[data-theme-toggle]');
+  const r=document.documentElement;
+  let d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+  r.setAttribute('data-theme',d);
+  updateToggleIcon(t,d);
+  t&&t.addEventListener('click',()=>{
+    d=d==='dark'?'light':'dark';
+    r.setAttribute('data-theme',d);
+    updateToggleIcon(t,d);
+  });
+  function updateToggleIcon(btn,theme){
+    if(!btn)return;
+    btn.setAttribute('aria-label','Switch to '+(theme==='dark'?'light':'dark')+' mode');
+    btn.innerHTML=theme==='dark'
+      ?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+      :'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  }
+})();
+
+// Form submission
+function handleSubmit(e){
+  e.preventDefault();
+  const btn=e.target.querySelector('.form-submit');
+  const note=document.getElementById('form-note');
+  btn.textContent='Sent ✓';
+  btn.style.background='#437a22';
+  btn.disabled=true;
+  note.style.display='block';
+  note.textContent="Got it — I'll be in touch within 24 hours.";
+  note.style.color='rgba(205,204,202,.6)';
+}
+
+// Scroll reveal
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.opacity='1';
+      e.target.style.transform='translateY(0)';
+    }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.service-card,.process-step,.case-study-card,.about-visual').forEach(el=>{
+  el.style.opacity='0';
+  el.style.transform='translateY(16px)';
+  el.style.transition='opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1)';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
