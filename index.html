@@ -273,16 +273,16 @@ footer{padding-block:var(--space-8);border-top:1px solid var(--color-border)}
     </div>
     <div class="hero-proof fade-up fade-up-5">
       <div class="proof-stat">
-        <div class="proof-number">0 hrs</div>
-        <div class="proof-label">Manual work replaced per week</div>
+        <div class="proof-number">0</div>
+        <div class="proof-label">Manual steps left in one client's weekly routine</div>
       </div>
       <div class="proof-stat">
         <div class="proof-number">40+</div>
-        <div class="proof-label">Active users on one system</div>
+        <div class="proof-label">Subscribers served by one automated system</div>
       </div>
       <div class="proof-stat">
         <div class="proof-number">~1 hr</div>
-        <div class="proof-label">Monthly maintenance required</div>
+        <div class="proof-label">Maintenance per month — that's it</div>
       </div>
     </div>
   </div>
@@ -379,8 +379,8 @@ footer{padding-block:var(--space-8);border-top:1px solid var(--color-border)}
     <div class="case-study-card">
       <div class="case-study-header">
         <div class="case-badge">Case Study</div>
-        <div class="case-study-title">Church Operations Automation Ecosystem</div>
-        <p class="case-study-sub">A 200+ member organization had staff spending hours each week manually transcribing sermons, distributing updates, and maintaining content. I built a fully autonomous pipeline that eliminated all of it.</p>
+        <div class="case-study-title">The weekly grind that ran itself out of a job</div>
+        <p class="case-study-sub">A 200+ member church was burning staff hours every week on the same routine: turning each service's recording into a formatted outline document, updating two websites, organizing videos, assembling announcements, and getting it all in front of the congregation. Twice a week, every week — and when the one person who knew the process was busy, things slipped. I built a system that does the whole routine on its own.</p>
       </div>
       <div class="case-metrics">
         <div class="metric-box">
@@ -398,39 +398,29 @@ footer{padding-block:var(--space-8);border-top:1px solid var(--color-border)}
       </div>
       <div class="case-body">
         <div>
-          <div class="case-section-label">What was built</div>
+          <div class="case-section-label">Now, when a service ends, everything just happens</div>
           <div class="case-pipeline">
             <div class="pipeline-step">
               <div class="step-num">1</div>
-              <div class="step-text"><strong>Sermon Pipeline</strong> — MP3 uploaded to S3 → Whisper transcription runs automatically → LLM formats the transcript into a structured outline → Word + PDF documents generated → auto-emailed to staff. Zero manual typing.</div>
+              <div class="step-text"><strong>The recording becomes a polished outline document automatically</strong> — formatted the way the church likes it, scripture quotes corrected to the exact translation they use — and lands in the staff's inboxes the same afternoon. Nobody types a word.</div>
             </div>
             <div class="pipeline-step">
               <div class="step-num">2</div>
-              <div class="step-text"><strong>Content Distribution</strong> — n8n polls YouTube for new uploads, categorizes content with an LLM, generates HTML email digests, and sends to 40+ segmented subscribers. A human-in-the-loop approval step lets me review before any send.</div>
+              <div class="step-text"><strong>Both websites update themselves</strong> — each new message posted with cleaned-up, consistent titles, and every video gets chapter markers and a searchable description within hours of going live. No one logs in to do it.</div>
             </div>
             <div class="pipeline-step">
               <div class="step-num">3</div>
-              <div class="step-text"><strong>YouTube Auto-Updates</strong> — The pipeline parses Q&A questions from Bible study recordings and automatically updates video descriptions to be standardized and searchable. No manual edits needed.</div>
+              <div class="step-text"><strong>Announcements assemble themselves into a ready-to-send bulletin</strong> — a staff member reviews it and clicks one button. The system handles the sending, and members manage their own subscriptions through a simple portal.</div>
             </div>
           </div>
+          <p style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7;margin-top:var(--space-5)">The one place a human still touches the process is the one place a human <em>should</em>: nothing goes out to the congregation without a person approving it. Everything else runs unattended.</p>
         </div>
         <div>
-          <div class="case-section-label">Tech stack</div>
-          <div class="tech-tags">
-            <span class="tech-tag">AWS CDK</span>
-            <span class="tech-tag">Python</span>
-            <span class="tech-tag">n8n</span>
-            <span class="tech-tag">AWS Lambda</span>
-            <span class="tech-tag">AWS Batch</span>
-            <span class="tech-tag">Whisper</span>
-            <span class="tech-tag">LLM post-processing</span>
-            <span class="tech-tag">AppSmith</span>
-            <span class="tech-tag">S3</span>
-            <span class="tech-tag">AWS Lightsail</span>
-          </div>
+          <div class="case-section-label">The result</div>
+          <p style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">What previously consumed hours of staff time each week now runs entirely on its own. It's been in production since early 2026 and hasn't missed a service. It checks itself — I look at it about once a month. The staff stopped thinking about it, which was the whole point.</p>
           <div style="margin-top:var(--space-6)">
-            <div class="case-section-label">The result</div>
-            <p style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">What previously consumed hours of staff time each week now runs entirely on its own. The system has been in production since January 2026 with zero downtime. It checks itself — I look at it about once a month.</p>
+            <div class="case-section-label">Built for a business like yours</div>
+            <p style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">This wasn't built for a tech company. It was built for a small organization with no IT department, no engineers, and no patience for tools that need babysitting — exactly the situation most small businesses are in.</p>
           </div>
           <div style="margin-top:var(--space-6)">
             <div class="case-section-label">What this means for your business</div>
@@ -621,19 +611,6 @@ footer{padding-block:var(--space-8);border-top:1px solid var(--color-border)}
       :'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
   }
 })();
-
-// Form submission
-function handleSubmit(e){
-  e.preventDefault();
-  const btn=e.target.querySelector('.form-submit');
-  const note=document.getElementById('form-note');
-  btn.textContent='Sent ✓';
-  btn.style.background='#437a22';
-  btn.disabled=true;
-  note.style.display='block';
-  note.textContent="Got it — I'll be in touch within 24 hours.";
-  note.style.color='rgba(205,204,202,.6)';
-}
 
 // Scroll reveal
 const observer=new IntersectionObserver((entries)=>{
