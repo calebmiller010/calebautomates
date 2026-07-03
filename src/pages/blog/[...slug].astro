@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const items = await getCollection('blog', (e) => e.data.published);
+  return items.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
+---
+
+<Base title={`${entry.data.title} — Caleb Automates`} description={entry.data.description}>
+  <article id="post-detail">
+    <div class="container">
+      <a class="back-link" href="/blog/">← All articles</a>
+      <div class="post-badge">Article</div>
+      <h1 class="post-title">{entry.data.title}</h1>
+      <div class="post-byline">By Caleb Miller · calebautomates.com</div>
+
+      <div class="post-prose">
+        <Content />
+      </div>
+
+      {
+        entry.data.tags.length > 0 && (
+          <div class="tech-tags post-tags">
+            {entry.data.tags.map((t) => (
+              <span class="tech-tag">{t}</span>
+            ))}
+          </div>
+        )
+      }
+
+      <div class="post-cta">
+        <div>
+          <div class="post-cta-head">Want a second pair of eyes on your busywork?</div>
+          <div class="post-cta-sub">A free 20-minute call — I'll find at least 5 hours a week your team could get back, or tell you straight there's nothing here. No pitch.</div>
+        </div>
+        <a class="btn-primary" href={BOOKING_URL} target="_blank" rel="noopener">
+          Book a 20-minute call
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+        </a>
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  #post-detail { padding-block: clamp(var(--space-12), 7vw, var(--space-20)); }
+  #post-detail .container { max-width: 720px; }
+  .back-link { display: inline-block; font-size: var(--text-sm); color: var(--color-text-muted); text-decoration: none; margin-bottom: var(--space-8); }
+  .back-link:hover { color: var(--color-text); }
+  .post-badge { display: inline-block; font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-primary); margin-bottom: var(--space-3); }
+  .post-title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 400; color: var(--color-text); margin: 0 0 var(--space-3); line-height: 1.2; }
+  .post-byline { font-size: var(--text-sm); color: var(--color-text-faint); margin-bottom: var(--space-10); }
+  .post-prose :global(h2) { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 400; color: var(--color-text); margin: var(--space-10) 0 var(--space-4); }
+  .post-prose :global(h3) { font-size: var(--text-base); font-weight: 600; color: var(--color-text); margin: var(--space-6) 0 var(--space-2); }
+  .post-prose :global(p) { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.75; margin-bottom: var(--space-4); }
+  .post-prose :global(ol), .post-prose :global(ul) { margin: 0 0 var(--space-4) var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
+  .post-prose :global(li) { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.7; }
+  .post-prose :global(strong) { color: var(--color-text); font-weight: 600; }
+  .post-prose :global(a) { color: var(--color-primary); }
+  .post-prose :global(blockquote) { border-left: 3px solid var(--color-border); margin: var(--space-6) 0; padding-left: var(--space-5); color: var(--color-text-muted); font-style: italic; }
+  .post-tags { margin-top: var(--space-8); }
+  .post-cta { margin-top: var(--space-12); padding-top: var(--space-8); border-top: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); flex-wrap: wrap; }
+  .post-cta-head { font-size: var(--text-base); font-weight: 600; color: var(--color-text); }
+  .post-cta-sub { font-size: var(--text-sm); color: var(--color-text-muted); max-width: 52ch; margin-top: 4px; }
+</style>
