@@ -85,7 +85,7 @@ None of this is automation being oversold to you. It's just where the math doesn
 
 ## What this actually looks like
 
-I've spent nine years building this kind of thing — first inside a healthcare data platform (Cerner/Oracle Health) handling roughly a million requests a day under strict compliance rules, then as lead architect on a fintech integration platform that automated how customer files got mapped between systems, estimated to save the company around $10 million a year. I also built an internal tool there that used AI to turn specs into configuration automatically, and separately cut a test suite by 80% and query times by 60%.
+I've spent nine years building this kind of thing — first inside a healthcare data platform handling roughly a million requests a day under strict compliance rules, then as lead architect on a fintech integration platform that automated how customer files got mapped between systems, estimated to save the company around $10 million a year. I also built an internal tool there that used AI to turn specs into configuration automatically, and separately cut a test suite by 80% and query times by 60%.
 
 I should be straight with you about the rest: I don't have paid consulting clients yet, and no testimonials or client case studies to point to. I'm independent since 2022, but this side of the practice — automation consulting — is new, and I'd rather tell you that plainly than dress it up.
 

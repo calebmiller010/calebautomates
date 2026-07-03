@@ -73,7 +73,7 @@ Plenty of businesses only need the first option. I'll tell you that on the call 
 
 ## Where This Judgment Comes From
 
-I've spent 9 years as a software engineer, the last several building integration and data systems specifically. At Cerner (now Oracle Health), I worked on healthcare-data services handling around a million requests a day, under GDPR compliance requirements — systems where getting the data hand-off right wasn't optional. At a fintech company, I was lead architect on an integration platform that automated customer file-mapping that had previously been done by hand; by our estimate it saved the business roughly $10 million a year. I've also cut a test suite's runtime by 80% and query times by 60% by fixing how systems were structured, not by throwing more hardware at them.
+I've spent 9 years as a software engineer, the last several building integration and data systems specifically. At a healthcare-technology company, I worked on healthcare-data services handling around a million requests a day, under GDPR compliance requirements — systems where getting the data hand-off right wasn't optional. At a fintech company, I was lead architect on an integration platform that automated customer file-mapping that had previously been done by hand; by our estimate it saved the business roughly $10 million a year. I've also cut a test suite's runtime by 80% and query times by 60% by fixing how systems were structured, not by throwing more hardware at them.
 
 That's the background I bring to a small business's version of the same problem: not guesswork, but the same kind of systems thinking, scaled down to your CRM and your invoicing tool instead of a hospital network or a bank.
 
