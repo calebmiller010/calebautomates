@@ -1,0 +1,149 @@
+---
+// Dual-path lead capture (rebuilt 2026-07-03): high-intent visitors book a call directly
+// (the 20-min discovery call is THE offer — positioning.md); lower-intent visitors describe
+// their task in the form. Booking link is the primary action, matching all outreach copy.
+const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
+---
+
+<section id="contact">
+  <div class="container">
+    <div>
+      <h2 class="cta-headline">Find your easiest<br /><em>automation win.</em></h2>
+      <p class="cta-sub">
+        Book a free 20-minute call. I'll find at least 5 hours a week your team could get back —
+        or I'll tell you straight there's nothing here. No pitch, no obligation.
+      </p>
+
+      <a class="cta-book-btn" href={BOOKING_URL} target="_blank" rel="noopener">
+        Book a 20-minute call
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+      </a>
+
+      <div class="cta-assurances">
+        <div class="cta-assurance">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
+          No sales pitch. Just a conversation.
+        </div>
+        <div class="cta-assurance">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
+          A specific, guaranteed win — or an honest "not yet."
+        </div>
+        <div class="cta-assurance">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
+          You talk to the person who builds it. Always.
+        </div>
+      </div>
+
+      <p class="cta-or">Rather not book yet? <a href="#contact-form">Describe what you're doing manually →</a></p>
+    </div>
+
+    <div class="contact-form-wrap" id="contact-form">
+      <div class="form-note-top">Prefer to write it out? Tell me what's eating your team's time and I'll reply within 24 hours — with an honest read on whether it's worth automating.</div>
+      <iframe
+        data-tally-src="https://tally.so/r/Xx1aAO?alignLeft=1&hideTitle=1&transparentBackground=1"
+        loading="lazy"
+        width="100%"
+        height="420"
+        frameborder="0"
+        marginheight="0"
+        marginwidth="0"
+        title="Contact form"
+        style="border-radius:var(--radius-sm);display:block"></iframe>
+    </div>
+  </div>
+
+  <script is:inline>
+    var d = document,
+      w = 'https://tally.so/widgets/embed.js',
+      v = function () {
+        'undefined' != typeof Tally
+          ? Tally.loadEmbeds()
+          : d.querySelectorAll('[data-tally-src]:not([src])').forEach(function (e) {
+              e.src = e.dataset.tallySrc;
+            });
+      };
+    if ('undefined' != typeof Tally) v();
+    else if (d.querySelector('script[src="' + w + '"]') == null) {
+      var s = d.createElement('script');
+      (s.src = w), (s.onload = v), (s.onerror = v), d.body.appendChild(s);
+    }
+  </script>
+</section>
+
+<style>
+  /* New dual-path CTA styling — reuses the global tokens; extends the existing #contact
+     (dark) section. .cta-headline / .cta-sub / (form tokens) come from global.css. */
+  #contact .container {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: clamp(var(--space-8), 4vw, var(--space-16));
+    align-items: center;
+  }
+  .cta-book-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-8);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: #171614;
+    background: #4f98a3;
+    padding: var(--space-4) var(--space-8);
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  }
+  .cta-book-btn:hover {
+    background: #6bb3bd;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px rgba(79, 152, 163, 0.25);
+  }
+  .cta-assurances {
+    margin-top: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .cta-assurance {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    color: rgba(205, 204, 202, 0.6);
+  }
+  .cta-assurance svg {
+    color: #4f98a3;
+    flex-shrink: 0;
+  }
+  .cta-or {
+    margin-top: var(--space-8);
+    font-size: var(--text-sm);
+    color: rgba(205, 204, 202, 0.5);
+  }
+  .cta-or a {
+    color: #4f98a3;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .cta-or a:hover {
+    text-decoration: underline;
+  }
+  .contact-form-wrap {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    scroll-margin-top: 90px;
+  }
+  .form-note-top {
+    font-size: var(--text-sm);
+    color: rgba(205, 204, 202, 0.7);
+    line-height: 1.6;
+    margin-bottom: var(--space-5);
+  }
+  @media (max-width: 720px) {
+    #contact .container {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,180 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const items = await getCollection('portfolio', (e) => e.data.published);
+  return items.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
+---
+
+<Base title={`${entry.data.title} — Caleb Automates`} description={entry.data.summary}>
+  <article id="case-detail">
+    <div class="container">
+      <a class="back-link" href="/portfolio/">← All case studies</a>
+      <div class="case-badge">Case Study</div>
+      <h1 class="case-detail-title">{entry.data.title}</h1>
+      <div class="case-detail-client">{entry.data.client}</div>
+
+      {
+        entry.data.metrics.length > 0 && (
+          <div class="case-detail-metrics">
+            {entry.data.metrics.map((m) => (
+              <div class="cdm-box">
+                <span class="cdm-num">{m.value}</span>
+                <span class="cdm-label">{m.label}</span>
+              </div>
+            ))}
+          </div>
+        )
+      }
+
+      <div class="case-prose">
+        <Content />
+      </div>
+
+      {
+        entry.data.tags.length > 0 && (
+          <div class="tech-tags case-detail-tags">
+            {entry.data.tags.map((t) => (
+              <span class="tech-tag">{t}</span>
+            ))}
+          </div>
+        )
+      }
+
+      <div class="case-detail-cta">
+        <div>
+          <div class="case-cta-head">Have a routine like this eating your team's time?</div>
+          <div class="case-cta-sub">Book a 20-minute call — I'll find at least 5 hours a week back or tell you straight there's nothing here.</div>
+        </div>
+        <a class="btn-primary" href={BOOKING_URL} target="_blank" rel="noopener">
+          Book a 20-minute call
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+        </a>
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  #case-detail {
+    padding-block: clamp(var(--space-12), 7vw, var(--space-20));
+  }
+  #case-detail .container {
+    max-width: 760px;
+  }
+  .back-link {
+    display: inline-block;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    margin-bottom: var(--space-8);
+  }
+  .back-link:hover {
+    color: var(--color-text);
+  }
+  .case-detail-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 400;
+    color: var(--color-text);
+    margin: var(--space-4) 0 var(--space-2);
+  }
+  .case-detail-client {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    margin-bottom: var(--space-8);
+  }
+  .case-detail-metrics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    background: var(--color-surface-offset);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    margin-bottom: var(--space-10);
+  }
+  .cdm-box {
+    flex: 1 1 140px;
+    padding: var(--space-6) var(--space-5);
+    text-align: center;
+    background: var(--color-surface);
+  }
+  .cdm-num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    color: var(--color-text);
+  }
+  .cdm-label {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+  /* Rendered-markdown (MDX) prose */
+  .case-prose :global(h2) {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 400;
+    color: var(--color-text);
+    margin: var(--space-10) 0 var(--space-4);
+  }
+  .case-prose :global(p) {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    margin-bottom: var(--space-4);
+  }
+  .case-prose :global(ol),
+  .case-prose :global(ul) {
+    margin: 0 0 var(--space-4) var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .case-prose :global(li) {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+  }
+  .case-prose :global(strong) {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .case-detail-tags {
+    margin-top: var(--space-8);
+  }
+  .case-detail-cta {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+  }
+  .case-cta-head {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  .case-cta-sub {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    max-width: 52ch;
+    margin-top: 4px;
+  }
+</style>
