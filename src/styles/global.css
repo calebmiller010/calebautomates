@@ -192,22 +192,14 @@ h2.section-title em{font-style:italic;color:var(--color-primary)}
 @media(max-width:680px){.about-grid{grid-template-columns:1fr}}
 
 /* ── CTA ───────────────────────────────────────────────────── */
-#contact{background:var(--color-text);color:var(--color-text-inverse)}
-#contact .container{display:grid;grid-template-columns:1fr 1.25fr;gap:clamp(var(--space-8),4vw,var(--space-16));align-items:start}
-.cta-headline{font-family:var(--font-display);font-size:var(--text-2xl);font-weight:400;color:var(--color-text-inverse);margin-bottom:var(--space-4)}
-.cta-headline em{font-style:italic;color:#4f98a3}
-.cta-sub{font-size:var(--text-base);color:rgba(205,204,202,.7);max-width:44ch;line-height:1.7}
-.contact-form{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-xl);padding:var(--space-6);display:flex;flex-direction:column;gap:var(--space-4)}
-.form-group{display:flex;flex-direction:column;gap:var(--space-2)}
-.form-label{font-size:var(--text-xs);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(205,204,202,.6)}
-.form-input,.form-textarea{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);font-size:var(--text-sm);color:var(--color-text-inverse);font-family:var(--font-body);resize:vertical;transition:border-color var(--transition)}
-.form-input::placeholder,.form-textarea::placeholder{color:rgba(205,204,202,.35)}
-.form-input:focus,.form-textarea:focus{outline:none;border-color:#4f98a3}
-.form-textarea{min-height:100px}
-.form-submit{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);font-size:var(--text-sm);font-weight:600;color:#171614;background:#4f98a3;padding:var(--space-3) var(--space-6);border-radius:var(--radius-full);border:none;cursor:pointer;font-family:var(--font-body);transition:background var(--transition)}
-.form-submit:hover{background:#227f8b}
-.form-note{font-size:var(--text-xs);color:rgba(205,204,202,.4);text-align:center}
-@media(max-width:720px){#contact .container{grid-template-columns:1fr}}
+/* Fixed dark band — intentionally does NOT follow the theme. It uses literal colors instead
+   of var(--color-text)/var(--color-text-inverse), which INVERT in dark mode and previously
+   turned the whole section light-gray with invisible text. Looks identical in light + dark. */
+#contact{background:#221f18;color:#f4f2ee}
+#contact .container{max-width:660px;text-align:center}
+.cta-headline{font-family:var(--font-display);font-size:var(--text-2xl);font-weight:400;color:#f7f6f2;margin-bottom:var(--space-4)}
+.cta-headline em{font-style:italic;color:#6bb3bd}
+.cta-sub{font-size:var(--text-base);color:rgba(244,242,238,.72);max-width:52ch;margin-inline:auto;line-height:1.7}
 
 /* ── FOOTER ──────────────────────────────────────────────── */
 footer{padding-block:var(--space-8);border-top:1px solid var(--color-border)}

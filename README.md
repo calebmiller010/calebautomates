@@ -68,7 +68,17 @@ _legacy/index.legacy.html    # the original single-file site, archived for refer
 ```
 
 ## CTA / lead capture
-`src/components/CTA.astro` is the dual-path contact section: the **primary** action is the
-Google Calendar booking link (`calendar.app.google/NUxmMR4GipiHsD7d9` — book a 20-min call),
-with the Tally form (`tally.so/r/Xx1aAO`) as the lower-friction "describe your task" fallback.
-Update the booking URL in that one file if it ever changes.
+`src/components/CTA.astro` is a focused, booking-first contact section: the **primary** action
+is the Google Calendar booking link (`calendar.app.google/NUxmMR4GipiHsD7d9` — book a 20-min
+call), with a **one-click prefilled email** (`mailto:` to `caleb@calebautomates.com`) as the
+zero-friction fallback for people not ready to book. No embedded form / backend. Update the
+booking URL or email in that one file if they change.
+
+> The section renders on a **fixed dark band** (literal colors in `global.css`, not the
+> `var(--color-text)` theme token) so it looks right in both light and dark mode. The earlier
+> version tied the background to a theme var that inverted in dark mode and hid the text — if
+> you ever restyle `#contact`, keep its colors literal, not theme-dependent.
+
+> If you later want a real inline form that emails you without a client handoff, a free tier of
+> **Web3Forms** or **Formspree** is a ~5-minute drop-in (single POST, one access key) — left
+> out here on purpose since it needs your signup/key.
