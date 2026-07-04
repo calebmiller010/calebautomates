@@ -1,0 +1,69 @@
+---
+// The real OPBC/church content-automation pipeline, visualized (2026-07-03, from a deep code
+// + n8n mining pass). Shows EXACTLY what the system does, generalized + show-safe: no real
+// domain, subscribers, or private content — the pattern/flow only. Each stage carries the real
+// ("church") label plus a "your business" parallel so a prospect sees the pattern transfers.
+// Pure CSS/HTML (no JS) — a mobile-first vertical pipeline that can't render broken.
+
+const stages = [
+  { n: 1, lane: 'Automated ingest', icon: '⬆️', label: 'A recording is uploaded', parallel: 'Your raw input arrives', desc: 'A file drop or a newly published video kicks off the whole run. No dashboard, no button — just the upload someone was already doing.' },
+  { n: 2, lane: 'Automated ingest', icon: '🛡️', label: 'A gatekeeper checks it', parallel: 'Rules decide it’s worth processing', desc: 'Validates it’s the right file on the right day, and locks it so the same item is never processed twice.' },
+  { n: 3, lane: 'AI processing · unattended', icon: '〰️', label: 'It’s transcribed', parallel: 'Speech becomes text', desc: 'The audio turns into a full transcript on compute that scales to zero when idle — you only pay when it runs.' },
+  { n: 4, lane: 'AI processing · unattended', icon: '✨', label: 'AI cleans it up', parallel: 'AI polishes your content', desc: 'An AI pass fixes readability and formatting while preserving every detail — cleanup, not summarizing.' },
+  { n: 5, lane: 'AI processing · unattended', icon: '📄', label: 'AI structures & drafts', parallel: 'AI builds the deliverable', desc: 'Splits it into sections, builds the branded document, updates the website and video chapters, and drafts the announcements.', fans: ['branded doc / PDF', 'website page', 'video chapters'] },
+  { n: 6, lane: 'The one human step', icon: '✅', label: 'You approve', parallel: 'One human sign-off', desc: 'The draft waits in a review queue. A person opens it, edits if needed, and clicks approve. Nothing reaches anyone without this.', gate: true },
+  { n: 7, lane: 'Distribute', icon: '📨', label: 'Sent to the right people', parallel: 'Delivered to your audience', desc: 'Filtered by each subscriber’s preferences, personalized, and sent at a safe rate — plus a published web copy. Subscribers manage their own preferences.' },
+];
+---
+
+<div class="pipe">
+  <div class="pipe-caption-top">
+    <strong>How it actually works.</strong> A real content-automation system I built and run in production — one upload in, polished branded deliverables out, with exactly <em>one</em> human approval before anything reaches an audience.
+  </div>
+
+  <ol class="pipe-steps" role="list">
+    {stages.map((s) => (
+      <li class={`pipe-step${s.gate ? ' is-gate' : ''}`}>
+        <div class="pipe-rail"><span class="pipe-num">{s.n}</span></div>
+        <div class="pipe-body">
+          <div class="pipe-lane">{s.lane}</div>
+          <div class="pipe-head"><span class="pipe-icon" aria-hidden="true">{s.icon}</span><span class="pipe-label">{s.label}</span><span class="pipe-parallel">→ {s.parallel}</span></div>
+          <p class="pipe-desc">{s.desc}</p>
+          {s.fans && (
+            <div class="pipe-fans">{s.fans.map((f) => <span class="pipe-chip">{f}</span>)}</div>
+          )}
+          {s.gate && <div class="pipe-gate-note">The only place the flow pauses for a person.</div>}
+        </div>
+      </li>
+    ))}
+  </ol>
+
+  <div class="pipe-rail-note">Every step is cached &amp; idempotent · any failure alerts a human · ~12 automated workflows, ~1&nbsp;hr/month of upkeep.</div>
+</div>
+
+<style>
+  .pipe { margin: var(--space-8) 0; }
+  .pipe-caption-top { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.7; max-width: 60ch; margin-bottom: var(--space-8); padding-bottom: var(--space-6); border-bottom: 1px solid var(--color-border); }
+  .pipe-caption-top strong { color: var(--color-text); }
+  .pipe-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+  .pipe-step { display: grid; grid-template-columns: 44px 1fr; gap: var(--space-4); position: relative; padding-bottom: var(--space-6); }
+  /* connecting line down the rail */
+  .pipe-rail { display: flex; flex-direction: column; align-items: center; }
+  .pipe-rail::after { content: ''; flex: 1; width: 2px; background: var(--color-border); margin-top: 6px; min-height: 12px; }
+  .pipe-step:last-child .pipe-rail::after { display: none; }
+  .pipe-num { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--text-sm); font-weight: 700; color: var(--color-text-muted); background: var(--color-surface); border: 2px solid var(--color-border); }
+  .pipe-body { padding-top: 2px; padding-bottom: var(--space-2); }
+  .pipe-lane { font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-text-faint); margin-bottom: var(--space-1); }
+  .pipe-head { display: flex; align-items: baseline; gap: var(--space-2); flex-wrap: wrap; }
+  .pipe-icon { font-size: var(--text-base); }
+  .pipe-label { font-size: var(--text-base); font-weight: 600; color: var(--color-text); }
+  .pipe-parallel { font-size: var(--text-sm); color: var(--color-primary); font-weight: 500; }
+  .pipe-desc { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.65; margin: var(--space-2) 0 0; max-width: 56ch; }
+  .pipe-fans { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+  .pipe-chip { font-size: var(--text-xs); color: var(--color-text-muted); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-full); padding: 2px var(--space-3); }
+  /* the human gate — visually distinct */
+  .pipe-step.is-gate .pipe-num { color: var(--color-bg); background: var(--color-primary); border-color: var(--color-primary); }
+  .pipe-step.is-gate .pipe-body { background: color-mix(in srgb, var(--color-primary) 8%, transparent); border: 1px solid color-mix(in srgb, var(--color-primary) 30%, var(--color-border)); border-radius: var(--radius-lg, var(--radius-md)); padding: var(--space-4) var(--space-5) var(--space-5); margin-left: calc(-1 * var(--space-2)); }
+  .pipe-gate-note { font-size: var(--text-xs); font-weight: 600; color: var(--color-primary); margin-top: var(--space-3); }
+  .pipe-rail-note { font-size: var(--text-xs); color: var(--color-text-faint); line-height: 1.6; margin-top: var(--space-4); padding-top: var(--space-5); border-top: 1px solid var(--color-border); }
+</style>

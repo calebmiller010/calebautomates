@@ -1,0 +1,116 @@
+---
+// "Watch it work" — an interactive, click-to-run demo that SHOWS what an automation does
+// instead of describing it (2026-07-03, Caleb's "show don't tell" steer). A realistic messy
+// input runs visibly through the pipeline stages and resolves into clean, structured actions.
+// Client-side only (no backend); it's a scripted illustration of the pattern Caleb builds, and
+// it's labeled as such and linked to the REAL church case study for proof — no fabrication.
+---
+
+<section id="watch-it-work">
+  <div class="container">
+    <div class="wiw-header">
+      <div class="problem-label">See it work <span style="display:inline-block;margin-left:var(--space-2);font-size:var(--text-xs);font-weight:600;letter-spacing:0.04em;color:var(--color-text-muted);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-full);padding:1px 10px;text-transform:none">Illustrative demo</span></div>
+      <h2 class="section-title">Don't take my word for it.<br /><em>Watch a manual task run itself.</em></h2>
+      <p class="wiw-sub">Here's the kind of messy, human input a business handles by hand every day. Hit the button and watch what an automation does with it — the same capture → understand → act → done shape I build for real (see <a href="/portfolio/church-automation-pipeline/">the church system</a> for a live one).</p>
+    </div>
+
+    <div class="wiw-demo">
+      <div class="wiw-col">
+        <div class="wiw-col-label">The messy input</div>
+        <div class="wiw-input">
+          <div class="wiw-input-meta">📩 Voicemail transcript · 0:14</div>
+          <p>"Hey it's Dave over at Dave's HVAC — need to push Thursday's install to next Tuesday if you can. And can you resend the invoice from the last job? I think it was around eight hundred forty bucks. Thanks."</p>
+        </div>
+      </div>
+
+      <div class="wiw-col">
+        <div class="wiw-col-label">What the automation does</div>
+        <ol class="wiw-steps" id="wiw-steps" role="list">
+          <li class="wiw-step" data-step="1"><span class="wiw-dot"></span><span class="wiw-step-text"><strong>Captures</strong> the voicemail and transcribes it</span></li>
+          <li class="wiw-step" data-step="2"><span class="wiw-dot"></span><span class="wiw-step-text"><strong>Understands</strong> it: a reschedule + an invoice resend</span></li>
+          <li class="wiw-step" data-step="3"><span class="wiw-dot"></span><span class="wiw-step-text"><strong>Moves</strong> Thursday's job → next Tuesday in the calendar</span></li>
+          <li class="wiw-step" data-step="4"><span class="wiw-dot"></span><span class="wiw-step-text"><strong>Re-sends</strong> invoice #1042 ($840) to Dave</span></li>
+          <li class="wiw-step" data-step="5"><span class="wiw-dot"></span><span class="wiw-step-text"><strong>Logs</strong> it all and flags one thing for you to confirm</span></li>
+        </ol>
+        <div class="wiw-result" id="wiw-result" hidden>
+          <div class="wiw-result-head">✓ Done — in about 3 seconds, unattended</div>
+          <div class="wiw-result-body">You didn't touch a calendar, an invoice, or the CRM. You just got a one-line heads-up: <em>"Rescheduled Dave's HVAC to Tue &amp; resent inv #1042 — confirm the new slot?"</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wiw-actions">
+      <button class="wiw-run" id="wiw-run" type="button">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        Run the automation
+      </button>
+      <p class="wiw-note">Illustrative demo of the pattern — not a live system. The <a href="/portfolio/church-automation-pipeline/">real one I built and run</a> follows the same shape.</p>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    const btn = document.getElementById('wiw-run');
+    const steps = Array.from(document.querySelectorAll('#wiw-steps .wiw-step'));
+    const result = document.getElementById('wiw-result');
+    if (!btn || !steps.length) return;
+    let running = false, timers = [];
+    function reset() {
+      timers.forEach(clearTimeout); timers = [];
+      steps.forEach((s) => s.classList.remove('active', 'done'));
+      result.hidden = true;
+    }
+    function run() {
+      if (running) { reset(); }
+      running = true;
+      btn.classList.add('is-running');
+      steps.forEach((s, i) => {
+        timers.push(setTimeout(() => {
+          steps.forEach((x) => x.classList.remove('active'));
+          s.classList.add('active');
+        }, i * 650 + 100));
+        timers.push(setTimeout(() => s.classList.add('done'), i * 650 + 600));
+      });
+      timers.push(setTimeout(() => {
+        steps.forEach((x) => x.classList.remove('active'));
+        result.hidden = false;
+        btn.classList.remove('is-running');
+        running = false;
+      }, steps.length * 650 + 400));
+    }
+    btn.addEventListener('click', () => { reset(); setTimeout(run, 20); });
+  })();
+</script>
+
+<style>
+  #watch-it-work { padding: clamp(var(--space-16), 10vw, var(--space-24)) 0; }
+  .wiw-header { max-width: 44rem; margin-bottom: var(--space-10); }
+  .wiw-sub { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.7; max-width: 54ch; margin-top: var(--space-4); }
+  .wiw-sub a, .wiw-note a { color: var(--color-primary); }
+  .wiw-demo { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); align-items: start; }
+  .wiw-col-label { font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-faint); margin-bottom: var(--space-3); }
+  .wiw-input { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg, var(--radius-md)); padding: var(--space-5); }
+  .wiw-input-meta { font-size: var(--text-xs); color: var(--color-text-muted); margin-bottom: var(--space-3); }
+  .wiw-input p { font-size: var(--text-base); color: var(--color-text); line-height: 1.7; font-style: italic; margin: 0; }
+  .wiw-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+  .wiw-step { display: flex; align-items: flex-start; gap: var(--space-3); font-size: var(--text-sm); color: var(--color-text-faint); line-height: 1.5; opacity: 0.5; transition: opacity var(--transition), color var(--transition); }
+  .wiw-step .wiw-step-text strong { color: inherit; font-weight: 600; }
+  .wiw-dot { flex-shrink: 0; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--color-border); margin-top: 2px; position: relative; transition: border-color var(--transition), background var(--transition); }
+  .wiw-step.active { opacity: 1; color: var(--color-text); }
+  .wiw-step.active .wiw-dot { border-color: var(--color-primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 20%, transparent); }
+  .wiw-step.done { opacity: 1; color: var(--color-text); }
+  .wiw-step.done .wiw-dot { background: var(--color-primary); border-color: var(--color-primary); }
+  .wiw-step.done .wiw-dot::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--color-bg); }
+  .wiw-result { margin-top: var(--space-5); background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface)); border: 1px solid color-mix(in srgb, var(--color-primary) 35%, var(--color-border)); border-radius: var(--radius-lg, var(--radius-md)); padding: var(--space-5); animation: wiw-in 0.4s ease; }
+  @keyframes wiw-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .wiw-result-head { font-size: var(--text-base); font-weight: 700; color: var(--color-text); margin-bottom: var(--space-2); }
+  .wiw-result-body { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.7; }
+  .wiw-actions { margin-top: var(--space-8); display: flex; align-items: center; gap: var(--space-5); flex-wrap: wrap; }
+  .wiw-run { display: inline-flex; align-items: center; gap: var(--space-2); font: inherit; font-size: var(--text-base); font-weight: 600; color: var(--color-bg); background: var(--color-primary); border: none; padding: var(--space-3) var(--space-6); border-radius: var(--radius-full); cursor: pointer; transition: transform var(--transition), opacity var(--transition); }
+  .wiw-run:hover { transform: translateY(-1px); opacity: 0.95; }
+  .wiw-run.is-running { opacity: 0.6; cursor: progress; }
+  .wiw-note { font-size: var(--text-xs); color: var(--color-text-muted); max-width: 44ch; margin: 0; line-height: 1.5; }
+  @media (max-width: 680px) { .wiw-demo { grid-template-columns: 1fr; gap: var(--space-8); } }
+  @media (prefers-reduced-motion: reduce) { .wiw-result { animation: none; } }
+</style>

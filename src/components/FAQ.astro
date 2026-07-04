@@ -1,0 +1,69 @@
+---
+// FAQ — kills the top objections of a skeptical first-time buyer (2026-07-03, from the
+// conversion-copy workflow, honesty-reviewed). Native <details> accordion — no JS. The
+// "why be your first client" answer turns zero-clients into a founder-led strength, honestly.
+// Pricing stays number-free ("fixed price, scoped on the call") per Caleb's default.
+const faqs = [
+  {
+    q: 'You don’t have client reviews. Why should I be your first?',
+    a: 'Fair question, and you deserve the honest answer instead of a dodge: I’m 9 years into a software engineering career, independent since 2022, and you’d be an early consulting client. Here’s what that actually gets you — you talk directly to the person building it, not an account manager or a junior dev passed your project. And I’m backing it with a real guarantee: I’ll find you at least 5 hours a week back, or I’ll tell you straight there’s nothing here worth building. If that trade-off isn’t for you, I understand.',
+  },
+  {
+    q: 'My business is small and I’m not techy. Is this even for me?',
+    a: 'This is built for that. If you can describe the annoying task you keep doing by hand, that’s all you need to bring. I handle the technical side and explain everything in plain language — no jargon test to pass.',
+  },
+  {
+    q: 'Will I need to babysit this thing once it’s running?',
+    a: 'No — that’s the point. My clearest example so far is a content pipeline I built as a volunteer for my church, running unattended since early 2026 at about an hour of my time a month. That’s the same “set it up right, then leave it alone” outcome I aim for with paid work.',
+  },
+  {
+    q: 'What if it breaks, or you disappear?',
+    a: 'If something breaks, you call me and I fix it — that’s part of the deal. I also build things to hand off: clear docs, no secret black box. If you ever wanted to walk away from me, you could.',
+  },
+  {
+    q: 'How much does it cost?',
+    a: 'I don’t quote a price until I understand what you actually need. We start with a free 20-minute call, and if it makes sense to move forward, you get a fixed price for the defined scope before any work starts — no open-ended hourly bill, no surprises.',
+  },
+  {
+    q: 'How long does it take?',
+    a: 'Depends on scope, but most of these run days to a couple weeks, not months. The call is where we nail down the real timeline for your case.',
+  },
+];
+---
+
+<section id="faq">
+  <div class="container">
+    <div class="faq-header">
+      <div class="problem-label">Questions</div>
+      <h2 class="section-title">The honest answers.</h2>
+    </div>
+    <div class="faq-list">
+      {faqs.map((f) => (
+        <details class="faq-item">
+          <summary class="faq-q">
+            <span>{f.q}</span>
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+          </summary>
+          <p class="faq-a">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  #faq { padding: clamp(var(--space-16), 10vw, var(--space-24)) 0; }
+  .faq-header { margin-bottom: var(--space-10); }
+  .faq-list { max-width: 46rem; display: flex; flex-direction: column; }
+  .faq-item { border-top: 1px solid var(--color-border); }
+  .faq-item:last-child { border-bottom: 1px solid var(--color-border); }
+  .faq-q {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+    cursor: pointer; list-style: none; padding: var(--space-5) 0;
+    font-size: var(--text-base); font-weight: 600; color: var(--color-text);
+  }
+  .faq-q::-webkit-details-marker { display: none; }
+  .faq-chevron { flex-shrink: 0; color: var(--color-text-muted); transition: transform var(--transition); }
+  .faq-item[open] .faq-chevron { transform: rotate(180deg); }
+  .faq-a { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.75; margin: 0 0 var(--space-5); max-width: 60ch; }
+</style>

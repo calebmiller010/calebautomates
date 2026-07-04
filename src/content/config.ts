@@ -20,4 +20,19 @@ const portfolio = defineCollection({
   }),
 });
 
-export const collections = { portfolio };
+// Blog / inbound articles. Drop a .md file in src/content/blog/ with this frontmatter.
+// Evergreen — no dates in URLs (slug only); `order` controls list position.
+const blog = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    // SEO meta description + list teaser (<=~155 chars).
+    description: z.string(),
+    // Lower = earlier in the list (newest/most-important first).
+    order: z.number().default(99),
+    tags: z.array(z.string()).default([]),
+    published: z.boolean().default(true),
+  }),
+});
+
+export const collections = { portfolio, blog };
