@@ -51,12 +51,12 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
     // ---- the time-load bands (team-wide, described in per-person units) ----
     // [id, label, low hrs/week, high hrs/week] — the low/high give an honest range for free.
     const LOAD_BANDS = [
-      ['light', 'A few hours a week, all told', 1, 5],
-      ['chunk', 'A solid chunk — most of a day, weekly', 6, 12],
-      ['half', 'About half of someone’s week', 15, 28],
-      ['full', 'A full-time person’s worth', 36, 44],
-      ['multi', 'A couple of people, big pieces of their weeks', 60, 110],
-      ['dept', 'Honestly? It’s a whole department', 120, 170],
+      ['light', 'A couple of hours a week, tops', 1, 5],
+      ['chunk', 'Roughly a day a week', 6, 12],
+      ['half', 'Two or three days a week', 15, 28],
+      ['full', 'Someone’s entire job', 36, 44],
+      ['multi', 'Two or three people’s jobs', 60, 110],
+      ['dept', 'A whole department', 120, 170],
     ];
     const loadBand = (id) => LOAD_BANDS.find((b) => b[0] === id);
     const loadLabel = (id) => { const b = loadBand(id); return b ? b[1] : ''; };
@@ -66,7 +66,7 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
       { id: 'team', q: 'First up — how big’s the team we’re doing this for?', opts: [['solo', 'Just me'], ['1-4', '1–4 people'], ['5-15', '5–15 people'], ['16-50', '16–50 people'], ['50+', '50+ people']] },
       { id: 'where', q: 'Where does the by-hand, repetitive stuff pile up most?', opts: [['data-entry', 'Re-keying & data entry'], ['follow-ups', 'Chasing follow-ups & client comms'], ['reports', 'Rebuilding the same reports & spreadsheets'], ['scheduling', 'Scheduling & intake'], ['other', 'Honestly? A bit of everything']] },
       { id: 'tools', q: 'How many tools does that work bounce between?', opts: [['one', 'Mostly just one'], ['disconnected', 'Two or three that don’t talk'], ['mess', 'Four-plus — it’s a mess']] },
-      { id: 'load', q: 'For whoever’s stuck with it, how much of the week does this really swallow — across everyone who touches it?', opts: LOAD_BANDS.map((b) => [b[0], b[1]]) },
+      { id: 'load', q: 'Roughly how much time a week does your team spend on it, all told?', opts: LOAD_BANDS.map((b) => [b[0], b[1]]) },
       { id: 'buy', q: 'If this just… stopped being manual — what would you do with the time back?', opts: [['clients', 'Actually focus on clients & sales'], ['errors', 'Stop the costly slip-ups'], ['stress', 'Take the pressure off the day'], ['grow', 'Grow without hiring']] },
     ];
     const ARCH = { 'data-entry': 'The Re-Keying Grind', 'follow-ups': 'The Follow-Up Treadmill', 'reports': 'The Copy-Paste Report Ritual', 'scheduling': 'The Scheduling Juggle', 'other': 'Death by a Thousand Small Tasks' };
@@ -194,7 +194,7 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
     function renderBFollow() {
       const id = S.bSel[S.bIdx]; const area = B_AREAS.find((x) => x.id === id);
       setProgress(true, 20 + ((S.bIdx + 1) / (S.bSel.length + 1)) * 80, 'Deeper dive · ' + (S.bIdx + 1) + ' of ' + S.bSel.length); backBtn.hidden = false;
-      root.innerHTML = '<div class="quiz-q">For <em>' + esc(shortLabel(area)) + '</em>, how much of the week does it really swallow — across everyone?</div>' +
+      root.innerHTML = '<div class="quiz-q">For <em>' + esc(shortLabel(area)) + '</em>, how much time a week does your team spend on that?</div>' +
         '<div class="quiz-opts">' + LOAD_BANDS.map((b) => '<button class="quiz-opt' + (S.b[id] === b[0] ? ' sel' : '') + '" data-bband="' + b[0] + '" type="button">' + esc(b[1]) + '</button>').join('') + '</div>';
     }
 
