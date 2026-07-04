@@ -173,8 +173,8 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
         'Time back would': aLabel('buy', S.a.buy),
         'Hourly rate': '$' + S.rate,
         Estimate: rngH(lowHrs, highHrs) + ' hrs/yr (' + rngC(lowCost, highCost) + ')',
-        Breakdown: breakdown,
       };
+      if (breakdown) payload.Breakdown = breakdown;
       return fetch('https://api.web3forms.com/submit', {
         method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload),
       }).then((r) => r.json()).then((d) => !!d.success).catch(() => false);
