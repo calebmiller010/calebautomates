@@ -143,8 +143,8 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
     // ---------- lead capture (Web3Forms — no backend) ----------
     function leadForm(kind) {
       return '<form class="quiz-lead" data-kind="' + kind + '" novalidate>' +
-        '<div class="quiz-lead-head">Want this in your inbox?</div>' +
-        '<div class="quiz-lead-sub">Drop your email and I’ll send your results over — and take an honest look at what’s actually worth automating. No list, no spam.</div>' +
+        '<div class="quiz-lead-head">Want my take on this?</div>' +
+        '<div class="quiz-lead-sub">Drop your email and I’ll review your answers and send back an honest read on what’s actually worth automating first. No list, no spam.</div>' +
         '<div class="quiz-lead-row"><input type="email" class="quiz-lead-email" name="email" placeholder="you@yourcompany.com" autocomplete="email" aria-label="Your email address" required />' +
         '<button type="submit" class="quiz-lead-btn">Send my results →</button></div>' +
         '<div class="quiz-lead-msg" aria-live="polite"></div>' +
@@ -312,7 +312,7 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { msg.textContent = 'That doesn’t look quite right — mind checking the email?'; msg.className = 'quiz-lead-msg err'; emailEl.focus(); return; }
       const btn = form.querySelector('.quiz-lead-btn'); btn.disabled = true; btn.textContent = 'Sending…'; msg.textContent = ''; msg.className = 'quiz-lead-msg';
       submitLead(email, form.getAttribute('data-kind')).then((ok) => {
-        if (ok) { form.innerHTML = '<div class="quiz-lead-done">✓ On its way — check your inbox. Want to skip ahead? <a href="' + BOOKING + '" target="_blank" rel="noopener">Book a call</a>.</div>'; statusEl.textContent = 'Your results are on the way.'; }
+        if (ok) { form.innerHTML = '<div class="quiz-lead-done">✓ Got it — I’ll take a look and be in touch soon. Want to skip ahead? <a href="' + BOOKING + '" target="_blank" rel="noopener">Book a call</a>.</div>'; statusEl.textContent = 'Sent — Caleb will be in touch.'; }
         else { btn.disabled = false; btn.textContent = 'Send my results →'; msg.textContent = 'That didn’t go through — try again, or email caleb@calebautomates.com.'; msg.className = 'quiz-lead-msg err'; }
       });
     });
