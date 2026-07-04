@@ -25,7 +25,7 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
   </div>
 </section>
 
-<script is:inline>
+<script is:inline define:vars={{ BOOKING_URL }}>
   (function () {
     const root = document.getElementById('quiz-root');
     const backBtn = document.getElementById('quiz-back');
@@ -33,7 +33,7 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
     const progFill = document.getElementById('quiz-progress-fill');
     const progLabel = document.getElementById('quiz-progress-label');
     if (!root) return;
-    const BOOKING = '${BOOKING_URL}';
+    const BOOKING = BOOKING_URL;
     const WEEKS = 48, DEFAULT_RATE = 35;
     const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const money = (n) => '$' + Math.round(n).toLocaleString();
