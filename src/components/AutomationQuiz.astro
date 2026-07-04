@@ -40,6 +40,9 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
     const statusEl = document.getElementById('quiz-status');
     if (!root) return;
     const BOOKING = BOOKING_URL;
+    // Web3Forms access key (public / client-safe — it only permits submitting this form,
+    // which emails Caleb). Get one in ~30s at https://web3forms.com (enter your email).
+    const W3F_KEY = '5353a62b-b901-4303-93a6-33663ed1addf';
     const WEEKS = 48, DEFAULT_RATE = 35;
     const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const money = (n) => '$' + Math.round(n).toLocaleString();
@@ -137,6 +140,46 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
       return 'mailto:caleb@calebautomates.com?subject=' + encodeURIComponent('My back-office automation breakdown') + '&body=' + encodeURIComponent(body);
     }
 
+    // ---------- lead capture (Web3Forms — no backend) ----------
+    function leadForm(kind) {
+      return '<form class="quiz-lead" data-kind="' + kind + '" novalidate>' +
+        '<div class="quiz-lead-head">Want this in your inbox?</div>' +
+        '<div class="quiz-lead-sub">Drop your email and I’ll send your results over — and take an honest look at what’s actually worth automating. No list, no spam.</div>' +
+        '<div class="quiz-lead-row"><input type="email" class="quiz-lead-email" name="email" placeholder="you@yourcompany.com" autocomplete="email" aria-label="Your email address" required />' +
+        '<button type="submit" class="quiz-lead-btn">Send my results →</button></div>' +
+        '<div class="quiz-lead-msg" aria-live="polite"></div>' +
+        '<input type="checkbox" class="quiz-lead-bot" name="botcheck" tabindex="-1" aria-hidden="true" autocomplete="off" />' +
+        '</form>';
+    }
+    const aLabel = (qid, val) => { const q = A_Q.find((x) => x.id === qid); const o = q && (q.opts || []).find((op) => op[0] === val); return o ? o[1] : (val || ''); };
+    function submitLead(email, kind) {
+      const onB = kind === 'quiz-b';
+      const raw = onB ? estB() : estA();
+      const lowHrs = onB ? raw.loH : raw.lowHrs, highHrs = onB ? raw.hiH : raw.highHrs;
+      const lowCost = onB ? raw.loC : raw.lowCost, highCost = onB ? raw.hiC : raw.highCost;
+      const arch = ARCH[S.a.where] || 'manual work';
+      const breakdown = onB ? raw.rows.map((r) => shortLabel(r.area) + ': ' + rngH(r.loH, r.hiH) + ' hrs/yr (' + rngC(r.loC, r.hiC) + ')').join('\n') : '';
+      const payload = {
+        access_key: W3F_KEY,
+        subject: onB ? 'New quiz lead (deep dive) — ' + email : 'New quiz lead — ' + arch,
+        from_name: 'Caleb Automates quiz',
+        email: email,
+        'Result type': onB ? 'Back-office diagnostic' : 'Quick read',
+        Archetype: arch,
+        Team: aLabel('team', S.a.team),
+        'Most manual work': aLabel('where', S.a.where),
+        Tools: aLabel('tools', S.a.tools),
+        'Weekly load': loadLabel(S.a.load),
+        'Time back would': aLabel('buy', S.a.buy),
+        'Hourly rate': '$' + S.rate,
+        Estimate: rngH(lowHrs, highHrs) + ' hrs/yr (' + rngC(lowCost, highCost) + ')',
+        Breakdown: breakdown,
+      };
+      return fetch('https://api.web3forms.com/submit', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload),
+      }).then((r) => r.json()).then((d) => !!d.success).catch(() => false);
+    }
+
     // ---------- renderers ----------
     function render() {
       if (S.phase === 'A') renderAQ();
@@ -173,8 +216,8 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
         '<span class="quiz-rate-hint">(salary ÷ 2,000 + ~25–30% for overhead — or just estimate)</span></div>' +
         '<p class="quiz-disclaimer">These numbers are your own — your answers, times a full working year, shown as a range. It’s a rough estimate to make the size of the problem visible, not an audit and not a promise. Whether these specific tasks are worth automating is exactly what the free call is for.</p>' +
         '<p class="quiz-read">' + read + '</p>' +
-        '<div class="quiz-actions"><a class="quiz-book" href="' + BOOKING + '" target="_blank" rel="noopener">Book a free 20-minute call</a>' +
-        '<a class="quiz-email" href="' + mailtoA() + '">Email me this result →</a></div>' +
+        '<div class="quiz-actions"><a class="quiz-book" href="' + BOOKING + '" target="_blank" rel="noopener">Book a free 20-minute call</a></div>' +
+        leadForm('quiz-a') +
         '<div class="quiz-deeper"><div class="quiz-deeper-head">Want a sharper number?</div>' +
         '<div class="quiz-deeper-sub">Two more minutes: break your back office down area-by-area for an itemized read.</div>' +
         '<button class="quiz-deeper-link" id="quiz-go-b" type="button">Go deeper — the 2-minute diagnostic →</button></div>' +
@@ -223,8 +266,8 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
         '<p class="quiz-read">Based on what you told me, your biggest time sink is <strong>' + esc(shortLabel(top.area)) + '</strong>, so ' + svcLine + ' That’s usually where automation shows up fastest — though what’s actually easiest to automate depends on the specifics, which is what the call is for.</p>' +
         '<details class="quiz-math"><summary>Show the math</summary><div class="quiz-math-body">Each area = the weekly-hours band you picked × 48 working weeks × a recoverable fraction (the share a computer can realistically take over), shown as a range from the band. The fractions I use: data movement ~70%, follow-ups/reconciliation ~60%, reporting ~55%. These are honest planning assumptions, not a measurement of your business. Dollar figures use $' + S.rate + '/hr (set on the first result screen).</div></details>' +
         '<p class="quiz-disclaimer">A planning estimate from your own answers — not an audit or a guarantee. What’s actually automatable (and worth it) is what the free call figures out.</p>' +
-        '<div class="quiz-actions"><a class="quiz-book" href="' + BOOKING + '" target="_blank" rel="noopener">Book a free 20-minute call</a>' +
-        '<a class="quiz-email" href="' + mailtoB() + '">Email me this breakdown →</a></div>' +
+        '<div class="quiz-actions"><a class="quiz-book" href="' + BOOKING + '" target="_blank" rel="noopener">Book a free 20-minute call</a></div>' +
+        leadForm('quiz-b') +
         '<div class="quiz-foot"><button class="quiz-restart" id="quiz-restart" type="button">↺ Start over</button>' +
         '<button class="quiz-share" id="quiz-share" type="button">↗ Share this</button></div>' +
         '<div class="quiz-xlink">Prefer to sanity-check one task at a time? <a href="/#cost-calculator">Try the quick cost calculator →</a></div>' +
@@ -245,8 +288,9 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
       if (t.id === 'quiz-restart') { S = freshState(); return render(); }
       if (t.id === 'quiz-share') {
         const onB = S.phase === 'Bresult';
-        const e = onB ? estB() : estA();
-        const txt = 'I just found my team could get back roughly ' + rngH(e.lowHrs, e.highHrs).replace('about ', 'about ') + ' hours a year on manual work — what’s yours? ' + location.origin + location.pathname;
+        const raw = onB ? estB() : estA();
+        const lowHrs = onB ? raw.loH : raw.lowHrs, highHrs = onB ? raw.hiH : raw.highHrs;
+        const txt = 'I just found my team could get back roughly ' + rngH(lowHrs, highHrs) + ' hours a year on manual work — what’s yours? ' + location.origin + location.pathname;
         if (navigator.share) { navigator.share({ text: txt }).catch(() => {}); }
         else if (navigator.clipboard) { navigator.clipboard.writeText(txt); statusEl.textContent = 'Copied — paste it anywhere.'; t.textContent = '✓ Copied'; }
         return;
@@ -258,7 +302,19 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
       const m = root.querySelectorAll('.quiz-metric-num'); const e = estA();
       if (m[0]) m[0].textContent = rngH(e.lowHrs, e.highHrs);
       if (m[1]) m[1].textContent = rngC(e.lowCost, e.highCost);
-      const em = root.querySelector('.quiz-email'); if (em) em.href = mailtoA();
+    });
+    root.addEventListener('submit', (ev) => {
+      const form = ev.target.closest('.quiz-lead'); if (!form) return;
+      ev.preventDefault();
+      if (form.querySelector('.quiz-lead-bot').checked) return;
+      const emailEl = form.querySelector('.quiz-lead-email'); const msg = form.querySelector('.quiz-lead-msg');
+      const email = (emailEl.value || '').trim();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { msg.textContent = 'That doesn’t look quite right — mind checking the email?'; msg.className = 'quiz-lead-msg err'; emailEl.focus(); return; }
+      const btn = form.querySelector('.quiz-lead-btn'); btn.disabled = true; btn.textContent = 'Sending…'; msg.textContent = ''; msg.className = 'quiz-lead-msg';
+      submitLead(email, form.getAttribute('data-kind')).then((ok) => {
+        if (ok) { form.innerHTML = '<div class="quiz-lead-done">✓ On its way — check your inbox. Want to skip ahead? <a href="' + BOOKING + '" target="_blank" rel="noopener">Book a call</a>.</div>'; statusEl.textContent = 'Your results are on the way.'; }
+        else { btn.disabled = false; btn.textContent = 'Send my results →'; msg.textContent = 'That didn’t go through — try again, or email caleb@calebautomates.com.'; msg.className = 'quiz-lead-msg err'; }
+      });
     });
     backBtn.addEventListener('click', () => {
       if (S.phase === 'A' && S.aIdx > 0) S.aIdx--;
@@ -335,4 +391,18 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
   .quiz-math { margin: var(--space-4) 0; }
   .quiz-math summary { font-size: var(--text-sm); color: var(--color-primary); cursor: pointer; }
   .quiz-math-body { font-size: var(--text-xs); color: var(--quiz-muted); line-height: 1.65; margin-top: var(--space-3); }
+  /* lead capture */
+  .quiz-lead { margin-top: var(--space-6); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-5); }
+  .quiz-lead-head { font-size: var(--text-base); font-weight: 600; color: var(--color-text); }
+  .quiz-lead-sub { font-size: var(--text-sm); color: var(--color-text-muted); margin: 4px 0 var(--space-4); line-height: 1.5; }
+  .quiz-lead-row { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+  .quiz-lead-email { flex: 1 1 12rem; min-width: 0; font: inherit; font-size: var(--text-base); color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); min-height: 44px; }
+  .quiz-lead-email:focus { outline: none; border-color: var(--color-primary); }
+  .quiz-lead-btn { font: inherit; font-size: var(--text-base); font-weight: 600; color: var(--color-bg); background: var(--color-primary); border: none; border-radius: var(--radius-full); padding: var(--space-3) var(--space-6); cursor: pointer; min-height: 44px; white-space: nowrap; }
+  .quiz-lead-btn:disabled { opacity: 0.6; cursor: default; }
+  .quiz-lead-msg { font-size: var(--text-sm); margin-top: var(--space-3); color: var(--quiz-muted); }
+  .quiz-lead-msg.err { color: #c0392b; }
+  .quiz-lead-done { font-size: var(--text-base); color: var(--color-text); line-height: 1.6; }
+  .quiz-lead-done a { color: var(--color-primary); }
+  .quiz-lead-bot { position: absolute; left: -9999px; }
 </style>
