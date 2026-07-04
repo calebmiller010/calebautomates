@@ -1,0 +1,279 @@
+---
+// The automation-value quiz (2026-07-03). Progressive: everyone takes the fast 5-question
+// "60-Second Read" (Concept A); anyone unsure or who opts in continues into the deeper
+// department-by-department "Back-Office Diagnostic" (Concept B). Honest by construction —
+// every number is arithmetic on the visitor's OWN answers, shown as a RANGE, with a plain
+// "estimate, not a promise" disclaimer and a transparent "show the math". No score, no
+// benchmark, no invented stat. Client-side only (no backend); lead capture = pre-filled mailto,
+// same idiom as CostCalculator.astro. See PLAN-quiz.md. Reuses design tokens + BOOKING_URL.
+const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
+---
+
+<section id="automation-quiz">
+  <div class="container">
+    <div class="quiz-head">
+      <div class="problem-label">Free · ~2 minutes · no email required</div>
+      <h1 class="quiz-title">What could automation actually save <em>you?</em></h1>
+      <p class="quiz-intro">Five quick questions about the manual work your team does by hand. You'll get a rough, honest estimate of the time and money on the table — built entirely from your own answers. No sign-up to see it.</p>
+    </div>
+
+    <div class="quiz-shell">
+      <div class="quiz-progress" id="quiz-progress" hidden><div class="quiz-progress-bar"><span id="quiz-progress-fill"></span></div><div class="quiz-progress-label" id="quiz-progress-label"></div></div>
+      <button class="quiz-back" id="quiz-back" type="button" hidden>← Back</button>
+      <div id="quiz-root"></div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    const root = document.getElementById('quiz-root');
+    const backBtn = document.getElementById('quiz-back');
+    const progWrap = document.getElementById('quiz-progress');
+    const progFill = document.getElementById('quiz-progress-fill');
+    const progLabel = document.getElementById('quiz-progress-label');
+    if (!root) return;
+    const BOOKING = '${BOOKING_URL}';
+    const WEEKS = 48, DEFAULT_RATE = 35;
+    const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const money = (n) => '$' + Math.round(n).toLocaleString();
+    const r500 = (n) => Math.round(n / 500) * 500;
+    const r5 = (n) => Math.round(n / 5) * 5;
+
+    // ---- Stage A ----
+    const A_Q = [
+      { id: 'team', q: 'Roughly how big is your team?', opts: [['solo', 'Just me'], ['1-4', '1–4 people'], ['5-15', '5–15 people'], ['16-50', '16–50 people'], ['50+', '50+ people']] },
+      { id: 'where', q: 'Where does most of the manual, repetitive work happen?', opts: [['data-entry', 'Data entry / re-keying'], ['follow-ups', 'Follow-ups & client comms'], ['reports', 'Reports & spreadsheets'], ['scheduling', 'Scheduling & intake'], ['other', 'A bit of everything']] },
+      { id: 'tools', q: 'How many tools or systems does that work touch?', opts: [['one', 'Mostly one'], ['disconnected', '2–3 that don’t talk'], ['mess', '4+ — it’s a mess']] },
+      { id: 'hours', q: 'About how many hours a week does your team spend on it, combined?', type: 'number' },
+      { id: 'buy', q: 'If this got fixed, what would that time actually buy you?', opts: [['clients', 'More time for clients & sales'], ['errors', 'Fewer costly errors'], ['stress', 'Less day-to-day stress'], ['grow', 'Room to grow without hiring']] },
+    ];
+    const BAND = { one: 0.10, disconnected: 0.20, mess: 0.30 };
+    const ARCH = { 'data-entry': 'The Re-Keying Grind', 'follow-ups': 'The Manual Follow-Up Treadmill', 'reports': 'The Copy-Paste Report Ritual', 'scheduling': 'The Scheduling Juggle', 'other': 'Death by a Thousand Small Tasks' };
+    const TOOLS_PHRASE = { one: 'mostly living in one tool', disconnected: 'spread across a few tools that don’t talk to each other', mess: 'scattered across 4+ tools that don’t talk to each other' };
+    const GOAL_PHRASE = { clients: 'free up time for clients and sales', errors: 'cut the errors that creep in', stress: 'take the day-to-day pressure off', grow: 'grow without adding headcount' };
+
+    // ---- Stage B ----
+    const B_AREAS = [
+      { id: 'data-movement', label: 'Moving data between tools (re-keying, copy-paste)', frac: 0.70, service: 'connecting your systems so data stops getting re-typed' },
+      { id: 'recon', label: 'Reconciliation & follow-ups (invoices, chasing, reminders)', frac: 0.60, service: 'automating the follow-ups and reconciliation' },
+      { id: 'reporting', label: 'Reporting (assembling the same reports again and again)', frac: 0.55, service: 'auto-assembling your recurring reports' },
+    ];
+    const FRAC_FLEX = 0.15;
+
+    const S = { phase: 'A', aIdx: 0, a: {}, rate: DEFAULT_RATE, bSel: [], bIdx: 0, b: {} };
+
+    function setProgress(show, fillPct, label) {
+      progWrap.hidden = !show;
+      if (show) { progFill.style.width = fillPct + '%'; progLabel.textContent = label; }
+    }
+
+    // ---------- A estimate ----------
+    function estA() {
+      const hrs = Math.max(0.5, Math.min(200, parseFloat(S.a.hours) || 5));
+      const band = BAND[S.a.tools] || 0.2;
+      const annualHours = Math.round(hrs * WEEKS);
+      const annualCost = Math.round(annualHours * S.rate);
+      return { annualHours, annualCost, lowHrs: r5(annualHours * (1 - band)), highHrs: r5(annualHours * (1 + band)), lowCost: r500(annualCost * (1 - band)), highCost: r500(annualCost * (1 + band)) };
+    }
+    function estB() {
+      let loH = 0, hiH = 0, loC = 0, hiC = 0; const rows = [];
+      for (const id of S.bSel) {
+        const area = B_AREAS.find((x) => x.id === id); const hrs = Math.max(0, parseFloat(S.b[id]) || 0);
+        const base = hrs * WEEKS;
+        const fLo = Math.max(0.1, area.frac - FRAC_FLEX), fHi = Math.min(0.95, area.frac + FRAC_FLEX);
+        const aLoH = r5(base * fLo), aHiH = r5(base * fHi), aLoC = r500(base * fLo * S.rate), aHiC = r500(base * fHi * S.rate);
+        loH += aLoH; hiH += aHiH; loC += aLoC; hiC += aHiC;
+        rows.push({ area, hrs, loH: aLoH, hiH: aHiH, loC: aLoC, hiC: aHiC });
+      }
+      rows.sort((x, y) => y.hiH - x.hiH);
+      return { rows, loH, hiH, loC, hiC };
+    }
+
+    function mailtoA() {
+      const e = estA(); const arch = ARCH[S.a.where] || 'manual work';
+      const subject = 'My automation quiz result: ' + arch;
+      const body = "Hi Caleb — here's what your quiz gave me:\n\n" +
+        'Team: ' + (S.a.team || '') + '\nMost manual work: ' + (S.a.where || '') + '\nTools it touches: ' + (S.a.tools || '') +
+        '\nCombined hours/week: ' + (S.a.hours || '') + '\nWhat the time back would buy: ' + (S.a.buy || '') +
+        '\n\nEstimate: ~' + e.lowHrs + '–' + e.highHrs + ' hrs/yr (~' + money(e.lowCost) + '–' + money(e.highCost) + ' in staff time) at $' + S.rate + '/hr.\n\nCan we talk about whether this is automatable?';
+      return 'mailto:caleb@calebautomates.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    }
+    function mailtoB() {
+      const b = estB();
+      let body = "Hi Caleb — here's my deeper automation-quiz breakdown:\n\n";
+      b.rows.forEach((r) => { body += '• ' + r.area.label + ': ~' + r.loH + '–' + r.hiH + ' hrs/yr (~' + money(r.loC) + '–' + money(r.hiC) + '), from ~' + r.hrs + ' hrs/week\n'; });
+      body += '\nTotal: ~' + b.loH + '–' + b.hiH + ' hrs/yr (~' + money(b.loC) + '–' + money(b.hiC) + ') at $' + S.rate + '/hr.\n\nWant to talk it through?';
+      return 'mailto:caleb@calebautomates.com?subject=' + encodeURIComponent('My back-office automation breakdown') + '&body=' + encodeURIComponent(body);
+    }
+
+    // ---------- renderers ----------
+    function render() {
+      if (S.phase === 'A') return renderAQ();
+      if (S.phase === 'Aresult') return renderAResult();
+      if (S.phase === 'Bselect') return renderBSelect();
+      if (S.phase === 'Bfollow') return renderBFollow();
+      if (S.phase === 'Bresult') return renderBResult();
+    }
+
+    function renderAQ() {
+      const q = A_Q[S.aIdx];
+      setProgress(true, 15 + (S.aIdx / A_Q.length) * 85, 'Question ' + (S.aIdx + 1) + ' of ' + A_Q.length);
+      backBtn.hidden = S.aIdx === 0;
+      let html = '<div class="quiz-q">' + esc(q.q) + '</div>';
+      if (q.type === 'number') {
+        html += '<div class="quiz-num-wrap"><input type="number" id="quiz-num" min="0.5" max="200" step="0.5" value="' + (S.a.hours || 5) + '" class="quiz-num" /><span class="quiz-num-suffix">hrs / week</span></div>' +
+          '<button class="quiz-next" id="quiz-num-go" type="button">See my result →</button>';
+      } else {
+        html += '<div class="quiz-opts">' + q.opts.map((o) => '<button class="quiz-opt' + (S.a[q.id] === o[0] ? ' sel' : '') + '" data-opt="' + o[0] + '" type="button">' + esc(o[1]) + '</button>').join('') + '</div>';
+      }
+      root.innerHTML = html;
+    }
+
+    function renderAResult() {
+      setProgress(false); backBtn.hidden = false;
+      const e = estA(); const arch = ARCH[S.a.where] || 'Manual Work';
+      const read = 'With ' + arch.toLowerCase() + ', that work is ' + (TOOLS_PHRASE[S.a.tools] || 'spread across your tools') +
+        '. The usual fix isn’t one big new system — it’s a handful of small, targeted automations that stop the repetitive part. That’s typically what’s worth automating first: rule-based work done by hand mostly because nobody’s gotten to it. You said the time back would ' + (GOAL_PHRASE[S.a.buy] || 'help the business') + ' — that’s usually where it shows up first.';
+      root.innerHTML =
+        '<div class="quiz-result">' +
+        '<div class="quiz-arch">You’re running <em>' + esc(arch) + '</em>.</div>' +
+        '<div class="quiz-metrics"><div class="quiz-metric"><div class="quiz-metric-num">~' + e.lowHrs + '–' + e.highHrs + '</div><div class="quiz-metric-label">hours a year</div></div>' +
+        '<div class="quiz-metric"><div class="quiz-metric-num">' + money(e.lowCost) + '–' + money(e.highCost) + '</div><div class="quiz-metric-label">in staff time, per year</div></div></div>' +
+        '<div class="quiz-rate">at <input type="number" id="quiz-rate" min="10" max="500" step="5" value="' + S.rate + '" class="quiz-rate-input" />/hr fully-loaded ' +
+        '<span class="quiz-rate-hint">(salary ÷ 2,000 + ~25–30% for overhead — or just estimate)</span></div>' +
+        '<p class="quiz-disclaimer">This is a rough estimate built from the numbers you just entered — not an audit, and not a guarantee of savings. It’s meant to make the size of the problem visible. Whether these specific tasks are automatable is exactly what the free call is for.</p>' +
+        '<p class="quiz-read">' + read + '</p>' +
+        '<div class="quiz-deeper"><div class="quiz-deeper-head">Not sure that captures it? Map it properly.</div>' +
+        '<div class="quiz-deeper-sub">Two more minutes: break your back office down area-by-area for a sharper, itemized read.</div>' +
+        '<button class="quiz-deeper-btn" id="quiz-go-b" type="button">Go deeper — the 2-minute diagnostic →</button></div>' +
+        '<div class="quiz-actions"><a class="quiz-book" href="' + BOOKING + '" target="_blank" rel="noopener">Book a free 20-minute call</a>' +
+        '<a class="quiz-email" href="' + mailtoA() + '">Email me this result →</a></div>' +
+        '<button class="quiz-share" id="quiz-share" type="button">↗ Share this</button>' +
+        '<div class="quiz-xlink">Want to sanity-check one specific task instead? <a href="/#cost-calculator">Try the quick cost calculator →</a></div>' +
+        '</div>';
+    }
+
+    function renderBSelect() {
+      setProgress(true, 20, 'Deeper dive · areas'); backBtn.hidden = false;
+      root.innerHTML = '<div class="quiz-q">Which of these eat the most time? <span class="quiz-q-sub">Pick any that apply.</span></div>' +
+        '<div class="quiz-opts">' + B_AREAS.map((a) => '<button class="quiz-opt multi' + (S.bSel.includes(a.id) ? ' sel' : '') + '" data-area="' + a.id + '" type="button">' + esc(a.label) + '</button>').join('') + '</div>' +
+        '<button class="quiz-next" id="quiz-b-go" type="button"' + (S.bSel.length ? '' : ' disabled') + '>Continue →</button>';
+    }
+
+    function renderBFollow() {
+      const id = S.bSel[S.bIdx]; const area = B_AREAS.find((x) => x.id === id);
+      setProgress(true, 20 + ((S.bIdx + 1) / (S.bSel.length + 1)) * 80, 'Deeper dive · ' + (S.bIdx + 1) + ' of ' + S.bSel.length); backBtn.hidden = false;
+      root.innerHTML = '<div class="quiz-q">Roughly how many hours a week does your team spend on<br><em>' + esc(area.label.replace(/ \(.*/, '')) + '</em>, combined?</div>' +
+        '<div class="quiz-num-wrap"><input type="number" id="quiz-num" min="0" max="200" step="0.5" value="' + (S.b[id] || 3) + '" class="quiz-num" /><span class="quiz-num-suffix">hrs / week</span></div>' +
+        '<button class="quiz-next" id="quiz-bnum-go" type="button">' + (S.bIdx + 1 < S.bSel.length ? 'Next →' : 'See my breakdown →') + '</button>';
+    }
+
+    function renderBResult() {
+      setProgress(false); backBtn.hidden = false;
+      const b = estB(); const top = b.rows[0];
+      const rowsHtml = b.rows.map((r) => '<div class="quiz-brow"><div class="quiz-brow-label">' + esc(r.area.label.replace(/ \(.*/, '')) + '</div>' +
+        '<div class="quiz-brow-val">~' + r.loH + '–' + r.hiH + ' hrs/yr · ' + money(r.loC) + '–' + money(r.hiC) + '</div></div>').join('');
+      const svc = b.rows.map((r) => r.area.service);
+      const svcLine = svc.length === 1 ? 'the highest-leverage first move is ' + svc[0] + '.' :
+        'the highest-leverage first move is usually ' + svc[0] + (svc.length > 1 ? ', then ' + svc.slice(1).join(', then ') : '') + '.';
+      root.innerHTML =
+        '<div class="quiz-result">' +
+        '<div class="quiz-arch">Your back office, <em>itemized.</em></div>' +
+        '<div class="quiz-brows">' + rowsHtml + '</div>' +
+        '<div class="quiz-metrics"><div class="quiz-metric"><div class="quiz-metric-num">~' + b.loH + '–' + b.hiH + '</div><div class="quiz-metric-label">total hours a year</div></div>' +
+        '<div class="quiz-metric"><div class="quiz-metric-num">' + money(b.loC) + '–' + money(b.hiC) + '</div><div class="quiz-metric-label">in staff time, per year</div></div></div>' +
+        '<p class="quiz-read">Based on what you told me, ' + svcLine + ' Starting with the biggest area — <strong>' + esc(top.area.label.replace(/ \(.*/, '')) + '</strong> — usually returns the most for the least.</p>' +
+        '<details class="quiz-math"><summary>Show the math</summary><div class="quiz-math-body">Each area = your combined hours/week × 48 working weeks × a recoverable fraction (the share a computer can realistically take over), shown as a range. The fractions I use: data movement ~70%, follow-ups/reconciliation ~60%, reporting ~55% — each flexed ±15 points for the range. These are my honest planning assumptions, not a measurement of your business.</div></details>' +
+        '<p class="quiz-disclaimer">A planning estimate from your own inputs — not an audit or a guarantee. What’s actually automatable (and worth it) is what the free call figures out.</p>' +
+        '<div class="quiz-actions"><a class="quiz-book" href="' + BOOKING + '" target="_blank" rel="noopener">Book a free 20-minute call</a>' +
+        '<a class="quiz-email" href="' + mailtoB() + '">Email me this breakdown →</a></div>' +
+        '</div>';
+    }
+
+    // ---------- events ----------
+    root.addEventListener('click', (ev) => {
+      const opt = ev.target.closest('[data-opt]');
+      if (opt) { S.a[A_Q[S.aIdx].id] = opt.getAttribute('data-opt'); if (S.aIdx < A_Q.length - 1) { S.aIdx++; } else { S.phase = 'Aresult'; } return render(); }
+      const area = ev.target.closest('[data-area]');
+      if (area) { const id = area.getAttribute('data-area'); const i = S.bSel.indexOf(id); if (i >= 0) S.bSel.splice(i, 1); else S.bSel.push(id); return render(); }
+      const t = ev.target;
+      if (t.id === 'quiz-num-go') { const v = document.getElementById('quiz-num'); S.a.hours = v ? v.value : 5; S.phase = 'Aresult'; return render(); }
+      if (t.id === 'quiz-go-b') { S.phase = 'Bselect'; S.bIdx = 0; return render(); }
+      if (t.id === 'quiz-b-go') { if (S.bSel.length) { S.phase = 'Bfollow'; S.bIdx = 0; render(); } return; }
+      if (t.id === 'quiz-bnum-go') { const v = document.getElementById('quiz-num'); S.b[S.bSel[S.bIdx]] = v ? v.value : 3; if (S.bIdx + 1 < S.bSel.length) { S.bIdx++; } else { S.phase = 'Bresult'; } return render(); }
+      if (t.id === 'quiz-share') { const e = estA(); const txt = 'I just found my team could get back roughly ' + e.lowHrs + '–' + e.highHrs + ' hours a year on manual work — what’s yours? ' + location.origin + location.pathname; if (navigator.share) { navigator.share({ text: txt }).catch(() => {}); } else if (navigator.clipboard) { navigator.clipboard.writeText(txt); t.textContent = '✓ Copied — paste it anywhere'; } return; }
+    });
+    root.addEventListener('input', (ev) => { if (ev.target.id === 'quiz-rate') { S.rate = Math.max(10, Math.min(500, parseFloat(ev.target.value) || DEFAULT_RATE)); const m = root.querySelectorAll('.quiz-metric-num'); const e = estA(); if (m[0]) m[0].textContent = '~' + e.lowHrs + '–' + e.highHrs; if (m[1]) m[1].textContent = money(e.lowCost) + '–' + money(e.highCost); const em = root.querySelector('.quiz-email'); if (em) em.href = mailtoA(); } });
+    backBtn.addEventListener('click', () => {
+      if (S.phase === 'A' && S.aIdx > 0) S.aIdx--;
+      else if (S.phase === 'Aresult') { S.phase = 'A'; S.aIdx = A_Q.length - 1; }
+      else if (S.phase === 'Bselect') S.phase = 'Aresult';
+      else if (S.phase === 'Bfollow') { if (S.bIdx > 0) S.bIdx--; else S.phase = 'Bselect'; }
+      else if (S.phase === 'Bresult') { S.phase = 'Bfollow'; S.bIdx = S.bSel.length - 1; }
+      render();
+    });
+
+    render();
+  })();
+</script>
+
+<style>
+  #automation-quiz { padding: clamp(var(--space-12), 8vw, var(--space-20)) 0; }
+  .quiz-head { max-width: 42rem; margin-bottom: var(--space-8); }
+  .quiz-title { font-family: var(--font-display); font-size: clamp(var(--text-2xl), 6vw, var(--text-4xl, var(--text-2xl))); font-weight: 400; color: var(--color-text); line-height: 1.1; margin: var(--space-2) 0; }
+  .quiz-title em { font-style: italic; color: var(--color-primary); }
+  .quiz-intro { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.7; max-width: 54ch; }
+  .quiz-shell { max-width: 40rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: clamp(var(--space-6), 4vw, var(--space-10)); position: relative; }
+  .quiz-progress { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6); }
+  .quiz-progress-bar { flex: 1; height: 6px; background: var(--color-bg); border-radius: var(--radius-full); overflow: hidden; }
+  .quiz-progress-bar span { display: block; height: 100%; background: var(--color-primary); transition: width var(--transition); }
+  .quiz-progress-label { font-size: var(--text-xs); color: var(--color-text-muted); white-space: nowrap; }
+  .quiz-back { position: absolute; top: var(--space-5); right: var(--space-6); background: none; border: none; font: inherit; font-size: var(--text-sm); color: var(--color-text-muted); cursor: pointer; }
+  .quiz-back:hover { color: var(--color-text); }
+  .quiz-q { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 400; color: var(--color-text); line-height: 1.3; margin-bottom: var(--space-6); }
+  .quiz-q-sub, .quiz-q em { font-family: var(--font-display); font-style: italic; color: var(--color-primary); font-size: 0.9em; }
+  .quiz-q-sub { font-size: var(--text-sm); color: var(--color-text-muted); font-style: normal; display: block; margin-top: 4px; }
+  .quiz-opts { display: flex; flex-direction: column; gap: var(--space-3); }
+  .quiz-opt { text-align: left; font: inherit; font-size: var(--text-base); color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); cursor: pointer; min-height: 44px; transition: border-color var(--transition), background var(--transition); }
+  .quiz-opt:hover { border-color: var(--color-primary); }
+  .quiz-opt.sel { border-color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg)); }
+  .quiz-opt.multi::before { content: '○ '; color: var(--color-text-faint); }
+  .quiz-opt.multi.sel::before { content: '● '; color: var(--color-primary); }
+  .quiz-num-wrap { display: flex; align-items: baseline; gap: var(--space-3); }
+  .quiz-num { font: inherit; font-family: var(--font-display); font-size: var(--text-3xl); width: 6rem; text-align: center; color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3); }
+  .quiz-num-suffix { font-size: var(--text-base); color: var(--color-text-muted); }
+  .quiz-next, .quiz-deeper-btn { margin-top: var(--space-6); display: inline-flex; align-items: center; font: inherit; font-size: var(--text-base); font-weight: 600; color: var(--color-bg); background: var(--color-primary); border: none; padding: var(--space-3) var(--space-6); border-radius: var(--radius-full); cursor: pointer; }
+  .quiz-next[disabled] { opacity: 0.4; cursor: not-allowed; }
+  /* result */
+  .quiz-arch { font-family: var(--font-display); font-size: var(--text-xl); color: var(--color-text); margin-bottom: var(--space-6); }
+  .quiz-arch em { font-style: italic; color: var(--color-primary); }
+  .quiz-metrics { display: flex; flex-wrap: wrap; gap: var(--space-6) var(--space-10); margin-bottom: var(--space-4); }
+  .quiz-metric-num { font-family: var(--font-display); font-size: clamp(var(--text-2xl), 6vw, var(--text-4xl, var(--text-2xl))); color: var(--color-text); line-height: 1; }
+  .quiz-metric-label { font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-2); }
+  .quiz-rate { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-5); }
+  .quiz-rate-input { font: inherit; width: 4.5rem; padding: 4px 8px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); color: var(--color-text); }
+  .quiz-rate-hint { display: block; font-size: var(--text-xs); margin-top: 4px; }
+  .quiz-disclaimer { font-size: var(--text-xs); color: var(--color-text-muted); font-style: italic; line-height: 1.6; margin: var(--space-4) 0; }
+  .quiz-read { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.7; margin: var(--space-5) 0; }
+  .quiz-read strong { color: var(--color-text); }
+  .quiz-deeper { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-5); margin: var(--space-6) 0; }
+  .quiz-deeper-head { font-size: var(--text-base); font-weight: 600; color: var(--color-text); }
+  .quiz-deeper-sub { font-size: var(--text-sm); color: var(--color-text-muted); margin: 4px 0 0; }
+  .quiz-deeper-btn { margin-top: var(--space-4); }
+  .quiz-actions { display: flex; align-items: center; gap: var(--space-5); flex-wrap: wrap; margin-top: var(--space-6); }
+  .quiz-book { font-size: var(--text-base); font-weight: 600; color: var(--color-bg); background: var(--color-primary); padding: var(--space-4) var(--space-8); border-radius: var(--radius-full); text-decoration: none; }
+  .quiz-book:hover { opacity: 0.95; }
+  .quiz-email { font-size: var(--text-sm); font-weight: 500; color: var(--color-primary); text-decoration: none; }
+  .quiz-share { margin-top: var(--space-5); display: block; background: none; border: none; font: inherit; font-size: var(--text-sm); color: var(--color-text-muted); cursor: pointer; padding: 0; }
+  .quiz-share:hover { color: var(--color-text); }
+  .quiz-xlink { font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-6); padding-top: var(--space-5); border-top: 1px solid var(--color-border); }
+  .quiz-xlink a { color: var(--color-primary); }
+  .quiz-brows { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-6); }
+  .quiz-brow { display: flex; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border); }
+  .quiz-brow-label { font-size: var(--text-sm); font-weight: 600; color: var(--color-text); }
+  .quiz-brow-val { font-size: var(--text-sm); color: var(--color-text-muted); }
+  .quiz-math { margin: var(--space-4) 0; }
+  .quiz-math summary { font-size: var(--text-sm); color: var(--color-primary); cursor: pointer; }
+  .quiz-math-body { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.65; margin-top: var(--space-3); }
+</style>
