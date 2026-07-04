@@ -11,6 +11,7 @@ const {
   title = 'Caleb Automates — Business Automation That Runs Itself',
   description = 'I build custom automations for small businesses — systems that eliminate manual work and run on their own. Based in Kansas City.',
 } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!DOCTYPE html>
@@ -21,9 +22,26 @@ const {
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Caleb Automates" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'ProfessionalService',
+      name: 'Caleb Automates',
+      description: 'Custom AI & automation that removes repetitive manual back-office work for small businesses.',
+      url: 'https://calebautomates.com',
+      email: 'caleb@calebautomates.com',
+      areaServed: 'United States',
+      founder: { '@type': 'Person', name: 'Caleb Miller', jobTitle: 'AI & Automation Consultant' },
+      knowsAbout: ['Business process automation', 'AI automation', 'Systems integration', 'Document pipelines'],
+    })} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

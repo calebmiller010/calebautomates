@@ -11,4 +11,7 @@ export default defineConfig({
     tailwind({ applyBaseStyles: false }),
     mdx(),
   ],
+  // NOTE: @astrojs/sitemap 3.7.3 crashes this Astro 4.16 build (reduce-of-undefined in its
+  // build:done hook), so we ship a static public/sitemap.xml instead. If pages are added,
+  // update that file (or revisit the integration on an Astro upgrade).
 });
