@@ -61,7 +61,7 @@ If none of that describes you — if you're the one manually reading, sorting, o
 
 ## Where to go from here
 
-If you want to see what this might look like for your own numbers, the [ROI calculator](/roi-calculator) on this site gives you a rough, honest estimate based on your own hours and volume. If you're not sure whether you're even a good candidate yet, the [readiness self-audit](/readiness-audit) walks through that before you talk to anyone.
+If you want to see what this might look like for your own numbers, the [cost calculator](/#cost-calculator) on this site gives you a rough, honest estimate based on your own hours and volume. If you're not sure whether you're even a good candidate yet, the [free automation quiz](/quiz) walks through that before you talk to anyone.
 
 And if you'd rather just talk it through: I offer a free 20-minute call. No pitch deck, no pressure. We look at what's actually eating your time, and I tell you honestly whether automation would help. If I can't find at least 5 hours a week worth of savings, I'll tell you that too — that's the guarantee.
 
