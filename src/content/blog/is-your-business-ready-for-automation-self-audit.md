@@ -85,7 +85,7 @@ None of this is automation being oversold to you. It's just where the math doesn
 
 ## What this actually looks like
 
-I've spent nine years building this kind of thing — first inside a healthcare data platform handling roughly a million requests a day under strict compliance rules, then as technical lead on a fintech integration platform that automated how customer files got mapped between systems, which the company projected would save around $10 million a year in onboarding time. I also built an internal tool there that used AI to turn specs into configuration automatically. Back on the healthcare side, I cut a test suite's runtime by 80% and a key query's time by 60%. And as an independent consultant, I worked on a government health-data project.
+I've spent nine years building this kind of thing — first inside a healthcare data platform handling roughly a million requests a day under strict compliance rules, then as technical lead on a fintech integration platform that automated how customer files got mapped between systems, which the company projected would save millions a year in onboarding time. I also built an internal tool there that used AI to turn specs into configuration automatically. Back on the healthcare side, I cut a test suite's runtime by 80% and a key query's time by 60%. And as an independent consultant, I worked on a government health-data project.
 
 I'll be straight with you about the rest: small-business automation is the newest part of my work, and I don't have a wall of testimonials to point to. I'd rather tell you that plainly than dress it up.
 
