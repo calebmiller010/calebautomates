@@ -2,7 +2,7 @@
 // Focused, low-friction CTA: the whole ask is "book a call". Fallback for people not ready to
 // book = a one-click prefilled email (no form backend). Renders on the fixed dark band
 // (#contact in global.css); colours come from the --band-* tokens so it stays theme-fixed.
-import { BOOKING_URL, CONTACT_MAILTO, CTA_PRIMARY } from '../lib/links';
+import { BOOKING_URL, CONTACT_MAILTO, CTA_PRIMARY, CTA_EMAIL } from '../lib/links';
 ---
 
 <section id="contact" class="section--tight">
@@ -17,7 +17,7 @@ import { BOOKING_URL, CONTACT_MAILTO, CTA_PRIMARY } from '../lib/links';
         {CTA_PRIMARY}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
       </a>
-      <a class="btn btn--link cta-email" href={CONTACT_MAILTO}>or email me →</a>
+      <a class="btn btn--link cta-email" href={CONTACT_MAILTO}>{CTA_EMAIL}</a>
     </div>
   </div>
 </section>
