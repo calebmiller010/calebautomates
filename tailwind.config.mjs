@@ -28,8 +28,8 @@ export default {
         'primary-highlight': 'var(--color-primary-highlight)',
       },
       fontFamily: {
-        display: ['Instrument Serif', 'Georgia', 'serif'],
-        body: ['DM Sans', 'Helvetica Neue', 'sans-serif'],
+        display: ['Source Serif 4', 'Georgia', 'Times New Roman', 'serif'],
+        body: ['Source Sans 3', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
       borderRadius: { xl: '1rem' },
     },

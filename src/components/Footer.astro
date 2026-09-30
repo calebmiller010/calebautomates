@@ -1,6 +1,36 @@
+---
+// Footer doubles as the contact card (P1-8): a real email address is the most
+// "real person" thing on the site.
+import { BOOKING_URL, EMAIL, CONTACT_MAILTO } from '../lib/links';
+---
 <footer>
   <div class="container footer-inner">
-    <div class="footer-logo">Caleb Automates</div>
-    <div class="footer-copy">© 2026 · Kansas City, KS · <a href="/advisors/" style="color:inherit">For advisors &amp; referral partners</a></div>
+    <div class="footer-id">
+      <div class="footer-logo">Caleb Automates</div>
+      <div class="footer-copy">Automation &amp; systems consulting · Kansas City</div>
+    </div>
+    <ul class="footer-links" role="list">
+      <li><a href={CONTACT_MAILTO}>{EMAIL}</a></li>
+      <li><a href={BOOKING_URL} target="_blank" rel="noopener">Book a call</a></li>
+      <li><a href="/advisors/">For advisors</a></li>
+      <li><a href="/quiz/">Free automation quiz</a></li>
+    </ul>
+    <div class="footer-copy footer-year">© 2026</div>
   </div>
 </footer>
+
+<style>
+  .footer-inner { align-items: flex-start; }
+  .footer-id { display: flex; flex-direction: column; gap: var(--space-1); }
+  .footer-links { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); }
+  .footer-links a {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .footer-links a:hover { color: var(--color-text); text-decoration: underline; text-underline-offset: 3px; }
+  .footer-year { align-self: center; }
+</style>
