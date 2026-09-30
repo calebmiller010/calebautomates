@@ -1,19 +1,19 @@
 ---
 title: The onboarding bottleneck that automated itself away
-client: Prior role · technical lead at a fintech company
-summary: Bringing on each new customer meant engineers hand-mapping that customer's data files into the internal system — weeks of work apiece, and a hard ceiling on growth. I led the build of an integration platform that did the mapping automatically — projected by the company to save ~$10M a year in onboarding time.
-order: 2
+client: Engineering career · technical lead at a fintech company
+summary: Bringing on each new customer meant engineers hand-mapping that customer's data files into the internal system — slow, manual work every time, and a ceiling on growth. I led the build of an integration platform that drafts the mapping automatically — projected by the company to save ~$10M a year in onboarding time.
+order: 4
 featured: false
 metrics:
   - { value: "~$10M/yr", label: "Projected onboarding savings" }
-  - { value: "Weeks → automatic", label: "Per-customer file mapping" }
+  - { value: "Manual → reviewable draft", label: "Per-customer file mapping" }
 tags: ["System integration", "Data mapping", "Onboarding automation", "Runs unattended"]
 published: true
 ---
 
 Every new customer arrived with their own data, in their own format. Bringing them on meant an
 engineer sitting down and mapping that customer's files into the company's internal system — by
-hand, from scratch, every single time. It took **weeks of engineering time per customer**.
+hand, from scratch, every single time. It was **slow, manual engineering work for every customer**.
 
 It was slow and error-prone, but the real cost was subtler: it put growth on a leash. The more
 customers the business won, the more engineering it burned just to onboard them. Success made the
@@ -23,14 +23,14 @@ bottleneck worse.
 
 As the platform's technical lead, I drove the architecture and much of the build of an integration platform that automated the file-mapping.
 Instead of an engineer translating each new customer's data by hand, the platform did the
-translation itself — taking customer files in whatever shape they arrived and mapping them into
-the internal model automatically.
+first pass itself — taking customer files in whatever shape they arrived and producing a mapping
+into the internal model that an engineer reviews instead of building from scratch.
 
-Onboarding stopped being an engineering project and became something that mostly just happened.
+Onboarding stopped being a from-scratch engineering project and became a review.
 
 ## The result
 
-The work that had been burning weeks per customer now ran automatically, freeing the engineering
+The hand-mapping that had eaten engineering time on every customer became a review step, freeing the engineering
 team to build product instead of doing data translation by hand. The company projected the savings
 at roughly **$10 million a year** in onboarding time alone. And because onboarding no longer scaled with headcount,
 growth stopped being throttled by it.

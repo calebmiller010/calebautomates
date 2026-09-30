@@ -1,0 +1,267 @@
+---
+// "For advisors & referral partners" (2026-09-30). Audience = exit planners (CEPAs), business
+// brokers, CPAs, fractional CFOs, bankers, attorneys — people with owner relationships who have no
+// software/systems specialist on their bench. Positioning: a complementary specialist who stays in
+// his lane, not an exit consultant. Honesty: no claims about valuation impact or referral volume;
+// the "why it matters" section describes what buyers look at, not results Caleb has produced.
+import Base from '../layouts/Base.astro';
+const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
+const MAILTO =
+  'mailto:caleb@calebautomates.com' +
+  '?subject=' + encodeURIComponent('Referral / intro') +
+  '&body=' + encodeURIComponent("Hi Caleb — I work with an owner who could use a look at their systems.\n\n(A line or two on the business and what's manual or fragile)\n\n");
+
+const helps = [
+  {
+    t: 'Find where the owner is the process',
+    d: 'I map the recurring work — quoting, scheduling, invoicing, reporting, follow-ups — and flag every step that only happens because one person remembers to do it.',
+  },
+  {
+    t: 'Automate the repetitive back office',
+    d: 'Data re-keyed between apps, the same emails sent by hand, reports rebuilt every Monday. I build the automations and hand them off with plain-language docs.',
+  },
+  {
+    t: 'Connect the tools they already have',
+    d: 'Most small businesses run on a CRM, accounting software, and a pile of spreadsheets that don’t talk. I wire them together so the numbers agree.',
+  },
+  {
+    t: 'Make the numbers visible',
+    d: 'A simple, automatic weekly view of the business — pulled from the systems they already use — instead of a report someone assembles by hand.',
+  },
+];
+
+const steps = [
+  { t: 'You make the intro', d: 'A short email to both of us is plenty. No forms, no referral paperwork.' },
+  { t: 'I talk with the owner', d: 'A free 20-minute call about what’s manual, fragile, or stuck in someone’s head. No pitch.' },
+  { t: 'Everyone knows what I found', d: 'With the owner’s OK, I loop you in on what I found and what I recommended, so it fits the plan you’re already working on.' },
+  { t: 'Fixed scope, fixed price', d: 'If there’s something worth building, the owner gets a written scope and price before any work starts — or an honest “not worth it yet.”' },
+];
+---
+
+<Base
+  title="For Advisors & Referral Partners — Caleb Automates"
+  description="For exit planners, brokers, CPAs, and advisors: a systems and automation specialist for your clients — so the business runs on systems, not on the owner's memory."
+>
+  <section id="adv-hero">
+    <div class="container">
+      <div class="problem-label">For advisors &amp; referral partners</div>
+      <h1 class="section-title">The systems specialist<br /><em>on your bench.</em></h1>
+      <p class="adv-lead">
+        You already have the attorney, the CPA, and the wealth advisor. When a client's business runs
+        on spreadsheets, sticky notes, and the owner's memory, I'm the person who fixes that part.
+        I help small businesses automate the repetitive work and put real systems under it.
+      </p>
+      <div class="adv-actions">
+        <a class="btn-primary" href={BOOKING_URL} target="_blank" rel="noopener">
+          Grab 20 minutes with me
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+        </a>
+        <a class="adv-link" href={MAILTO}>or make an intro by email &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="adv-section">
+    <div class="container adv-two">
+      <div>
+        <div class="problem-label">Why it matters to your clients</div>
+        <h2 class="adv-h2">A business that runs on systems is easier to grow — and easier to hand off.</h2>
+      </div>
+      <div class="adv-prose">
+        <p>
+          Whether an owner wants to grow, step back, or eventually sell, the same question comes up:
+          how much of this business only works because one person is holding it together? Buyers,
+          lenders, and successors all look hard at that.
+        </p>
+        <p>
+          Documented, automated processes are part of the answer. They free the owner's time now, and
+          they make the business less dependent on any one person later. That's the part I work on
+          — the day-to-day operations, not the deal.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="adv-section">
+    <div class="container">
+      <div class="problem-label">What I do for your clients</div>
+      <div class="adv-grid">
+        {helps.map((h) => (
+          <div class="adv-card">
+            <div class="adv-card-t">{h.t}</div>
+            <p class="adv-card-d">{h.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="adv-section">
+    <div class="container">
+      <div class="problem-label">How a referral works</div>
+      <ol class="adv-steps" role="list">
+        {steps.map((s, i) => (
+          <li class="adv-step">
+            <span class="adv-num">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <div class="adv-card-t">{s.t}</div>
+              <p class="adv-card-d">{s.d}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="adv-section">
+    <div class="container adv-two">
+      <div>
+        <div class="problem-label">What I don't do</div>
+        <h2 class="adv-h2">I stay in my lane.</h2>
+      </div>
+      <div class="adv-prose">
+        <p>
+          I don't give financial, tax, legal, or valuation advice, and I'm not going to compete with
+          you for the relationship. I'm the technical specialist: I look at how the work actually gets
+          done, fix what's manual or fragile, and report back in plain language.
+        </p>
+        <p>
+          My background: nine years building production software in healthcare, fintech, and
+          government work, and today, automations and software for local organizations.
+          <a href="/portfolio/">See the work</a> or <a href="/#about">read more about me</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="adv-section adv-last">
+    <div class="container">
+      <div class="adv-cta">
+        <div>
+          <div class="adv-cta-h">Let's get coffee.</div>
+          <p class="adv-card-d">I'm in Kansas City and glad to meet in person, or we can start with a quick call. I'd like to learn how you work with owners and where I might fit.</p>
+        </div>
+        <div class="adv-actions" style="margin-top:0">
+          <a class="btn-primary" href={BOOKING_URL} target="_blank" rel="noopener">Book a time</a>
+          <a class="adv-link" href={MAILTO}>or email me &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  #adv-hero {
+    padding-block: clamp(var(--space-16), 9vw, var(--space-24)) clamp(var(--space-10), 5vw, var(--space-16));
+    border-bottom: 1px solid var(--color-border);
+  }
+  .adv-lead {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    max-width: 58ch;
+    margin-top: var(--space-4);
+  }
+  .adv-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    margin-top: var(--space-8);
+  }
+  .adv-link {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+  .adv-link:hover { text-decoration: underline; }
+  .adv-section {
+    padding-block: clamp(var(--space-12), 7vw, var(--space-20)) 0;
+  }
+  .adv-last { padding-bottom: clamp(var(--space-12), 7vw, var(--space-20)); }
+  .adv-two {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: var(--space-10);
+    align-items: start;
+  }
+  .adv-h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: 400;
+    color: var(--color-text);
+    line-height: 1.2;
+    max-width: 22ch;
+  }
+  .adv-prose p {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    line-height: 1.75;
+    max-width: 60ch;
+  }
+  .adv-prose p + p { margin-top: var(--space-4); }
+  .adv-prose a { color: var(--color-primary); }
+  .adv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+    gap: var(--space-5);
+    margin-top: var(--space-6);
+  }
+  .adv-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+  }
+  .adv-card-t {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+  .adv-card-d {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.65;
+    margin: 0;
+  }
+  .adv-steps {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-6) 0 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+    gap: var(--space-6);
+  }
+  .adv-step { display: flex; gap: var(--space-4); align-items: flex-start; }
+  .adv-num {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    color: var(--color-primary);
+    line-height: 1.2;
+    flex-shrink: 0;
+  }
+  .adv-cta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-primary);
+    border-radius: var(--radius-xl);
+    padding: clamp(var(--space-6), 4vw, var(--space-10));
+  }
+  .adv-cta > div:first-child { max-width: 52ch; }
+  .adv-cta-h {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+  @media (max-width: 760px) {
+    .adv-two { grid-template-columns: 1fr; gap: var(--space-4); }
+  }
+</style>

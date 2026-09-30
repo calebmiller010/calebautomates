@@ -1,12 +1,13 @@
 ---
 // FAQ — kills the top objections of a skeptical first-time buyer (2026-07-03, from the
 // conversion-copy workflow, honesty-reviewed). Native <details> accordion — no JS. The
-// "why be your first client" answer turns zero-clients into a founder-led strength, honestly.
+// Updated 2026-09-30: the old "why be my first client" answer was inaccurate (Caleb has done paid
+// independent consulting, 2022–23). Answers may contain simple HTML (links) — rendered via set:html.
 // Pricing stays number-free ("fixed price, scoped on the call") per Caleb's default.
 const faqs = [
   {
-    q: 'You don’t have client reviews. Why should I be your first?',
-    a: 'Fair question, and you deserve the honest answer instead of a dodge: I’m 9 years into a software engineering career, independent since 2022, and you’d be an early consulting client. Here’s what that actually gets you — you talk directly to the person building it, not an account manager or a junior dev passed your project. And I’m backing it with a real guarantee: I’ll find you at least 5 hours a week back, or I’ll tell you straight there’s nothing here worth building. If that trade-off isn’t for you, I understand.',
+    q: 'Have you actually done this before?',
+    a: 'Yes. I’ve spent nine years building production software in healthcare and fintech, consulted independently on a government health-data project, and today I build and run automations and software for local organizations — from a church’s weekly content pipeline to a contractor’s lead-capturing website (<a href="/portfolio/">see the work</a>). You talk directly to the person who built all of it, not an account manager or a junior dev handed your project. And the first call comes with a simple guarantee: I’ll find you at least 5 hours a week back, or tell you straight there’s nothing here worth building.',
   },
   {
     q: 'My business is small and I’m not techy. Is this even for me?',
@@ -28,6 +29,10 @@ const faqs = [
     q: 'How long does it take?',
     a: 'Depends on scope, but most of these run days to a couple weeks, not months. The call is where we nail down the real timeline for your case.',
   },
+  {
+    q: 'I’m an advisor, broker, or CPA. Can I refer clients to you?',
+    a: 'Please do. I work alongside the advisors a business owner already trusts, and I stay in my lane — systems and software, never financial, legal, or tax advice. <a href="/advisors/">Here’s how a referral works.</a>',
+  },
 ];
 ---
 
@@ -44,7 +49,7 @@ const faqs = [
             <span>{f.q}</span>
             <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
           </summary>
-          <p class="faq-a">{f.a}</p>
+          <p class="faq-a" set:html={f.a} />
         </details>
       ))}
     </div>
@@ -65,5 +70,6 @@ const faqs = [
   .faq-q::-webkit-details-marker { display: none; }
   .faq-chevron { flex-shrink: 0; color: var(--color-text-muted); transition: transform var(--transition); }
   .faq-item[open] .faq-chevron { transform: rotate(180deg); }
+  .faq-a :global(a) { color: var(--color-primary); }
   .faq-a { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.75; margin: 0 0 var(--space-5); max-width: 60ch; }
 </style>

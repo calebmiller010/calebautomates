@@ -73,13 +73,13 @@ Plenty of businesses only need the first option. I'll tell you that on the call 
 
 ## Where This Judgment Comes From
 
-I've spent 9 years as a software engineer, the last several building integration and data systems specifically. At a healthcare-technology company, I worked on healthcare-data services handling around a million requests a day, under HIPAA and GDPR — systems where getting the data hand-off right wasn't optional. At a fintech company, I was technical lead on an integration platform that automated customer file-mapping that had previously been done by hand; the company projected it would save roughly $10 million a year in onboarding time. I've also cut a test suite's runtime by 80% and query times by 60% by fixing how systems were structured, not by throwing more hardware at them.
+I've spent 9 years as a software engineer, the last several building integration and data systems specifically. At a healthcare-technology company, I worked on healthcare-data services handling around a million requests a day, under HIPAA and GDPR — systems where getting the data hand-off right wasn't optional. At a fintech company, I was technical lead on an integration platform that automated customer file-mapping that had previously been done by hand; the company projected it would save roughly $10 million a year in onboarding time. As an independent consultant, I worked on health-data interoperability (FHIR and HL7) for a government healthcare project. And I've cut a test suite's runtime by 80% and a key query's time by 60% by fixing how systems were structured, not by throwing more hardware at them.
 
 That's the background I bring to a small business's version of the same problem: not guesswork, but the same kind of systems thinking, scaled down to your CRM and your invoicing tool instead of a hospital network or a bank.
 
 ## A Real Example, Not a Sales Pitch
 
-I don't have paying consulting clients yet. I'm early — this is a real thing about my business right now, and I'd rather tell you straight than dress it up. What that means for you: you're not a line item competing for my attention, and you're talking to the person who'll actually build your system, not an account manager who hands it to someone junior.
+I'm a one-person practice, and small-business automation is the newest part of my work — I'd rather tell you that straight than dress it up. What that means for you: you're not a line item competing for my attention, and you're talking to the person who'll actually build your system, not an account manager who hands it to someone junior.
 
 What I can show you is something I built and still maintain: a content pipeline for a 200+ member church, done as volunteer work, not a paid engagement. A recorded sermon goes in one end; an AI-formatted outline, two updated websites, video chapters and descriptions, and an assembled bulletin come out the other — after one human approval step. It's been running unattended in production since early this year, needs about an hour of my attention a month, and hasn't missed a single service.
 
