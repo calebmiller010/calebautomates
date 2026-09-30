@@ -14,16 +14,16 @@ const posts = (await getCollection('blog', (e) => e.data.published)).sort(
   <section id="blog-index">
     <div class="container">
       <div class="blog-header">
-        <div class="problem-label">Writing</div>
-        <h1 class="section-title">Automation, in plain terms.</h1>
-        <p class="blog-intro">No hype, no jargon — just how to think about automating the repetitive work that quietly eats your team's time, from someone who builds these systems for a living.</p>
+        <div class="eyebrow">Writing</div>
+        <h1 class="title title--section">Automation, in plain terms.</h1>
+        <p class="lede blog-intro">No hype, no jargon — just how to think about automating the repetitive work that quietly eats your team's time, from someone who builds these systems for a living.</p>
       </div>
 
       <div class="blog-list">
         {
           posts.map((post) => (
             <a class="blog-card" href={`/blog/${post.slug}/`}>
-              <h2 class="blog-card-title">{post.data.title}</h2>
+              <h2 class="title title--small blog-card-title">{post.data.title}</h2>
               <p class="blog-card-desc">{post.data.description}</p>
               <span class="blog-card-more">Read →</span>
             </a>
@@ -35,18 +35,17 @@ const posts = (await getCollection('blog', (e) => e.data.published)).sort(
 </Base>
 
 <style>
-  #blog-index { padding-block: clamp(var(--space-12), 7vw, var(--space-20)); }
   #blog-index .container { max-width: 760px; }
-  .blog-header { margin-bottom: var(--space-12); }
-  .blog-intro { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.7; max-width: 56ch; margin-top: var(--space-4); }
-  .blog-list { display: flex; flex-direction: column; gap: var(--space-1); }
+  .blog-header { margin-bottom: var(--space-10); }
+  .blog-intro { margin-top: var(--space-4); max-width: 56ch; }
+  .blog-list { display: flex; flex-direction: column; }
   .blog-card {
     display: block; text-decoration: none; padding: var(--space-6) 0;
     border-top: 1px solid var(--color-border); transition: opacity var(--transition);
   }
   .blog-card:last-child { border-bottom: 1px solid var(--color-border); }
   .blog-card:hover { opacity: 0.7; }
-  .blog-card-title { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 400; color: var(--color-text); margin: 0 0 var(--space-2); line-height: 1.3; }
-  .blog-card-desc { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.6; margin: 0 0 var(--space-3); }
+  .blog-card-title { margin: 0 0 var(--space-2); }
+  .blog-card-desc { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.5; margin: 0 0 var(--space-3); }
   .blog-card-more { font-size: var(--text-sm); font-weight: 600; color: var(--color-primary); }
 </style>

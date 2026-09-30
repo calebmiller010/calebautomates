@@ -1,62 +1,72 @@
+---
+const more = [
+  { href: '/portfolio/volunteer-scheduling-system/', label: 'Volunteer scheduling system' },
+  { href: '/portfolio/contractor-website-lead-capture/', label: 'Contractor website' },
+  { href: '/portfolio/fintech-integration-platform/', label: 'Fintech integration platform' },
+];
+---
+
 <section id="case-study">
   <div class="container">
-    <div style="margin-bottom:clamp(var(--space-8),4vw,var(--space-12))">
-      <div class="problem-label">Proof of Work</div>
-      <h2 class="section-title" style="margin-bottom:0">A real system.<br><em>Running in production.</em></h2>
+    <div class="section-head">
+      <div class="eyebrow">Proof of work</div>
+      <h2 class="title title--section">One system, running unattended since early 2026</h2>
     </div>
-    <div class="case-study-card">
-      <div class="case-study-header">
-        <div class="case-badge">Case Study</div>
-        <div class="case-study-title">The weekly grind that ran itself out of a job</div>
-        <p class="case-study-sub">A 200+ member church was burning staff hours every week on the same routine: turning each service's recording into a formatted outline document, updating two websites, organizing videos, assembling announcements, and getting it all in front of the congregation. Twice a week, every week — and when the one person who knew the process was busy, things slipped. I built a system that does the whole routine on its own.</p>
-      </div>
-      <div class="case-metrics">
-        <div class="metric-box">
-          <span class="metric-number">0 hrs</span>
-          <span class="metric-label">Manual work per week</span>
+
+    <div class="case-card">
+      <p class="case-lead">A 200+ member church was burning staff hours every week on the same routine: turning each service's recording into a formatted outline document, updating two websites, organizing videos, assembling announcements, and getting it all in front of the congregation. Twice a week, every week — and when the one person who knew the process was busy, things slipped. I built a system that does the whole routine on its own.</p>
+
+      <div class="case-stats">
+        <div class="case-metric">
+          <div class="stat">0 hrs</div>
+          <div class="case-metric-label">Manual work per week</div>
         </div>
-        <div class="metric-box">
-          <span class="metric-number">40+</span>
-          <span class="metric-label">Subscribers in week 1</span>
+        <div class="case-metric">
+          <div class="stat">40+</div>
+          <div class="case-metric-label">Subscribers in week 1</div>
         </div>
-        <div class="metric-box">
-          <span class="metric-number">~1 hr</span>
-          <span class="metric-label">Monthly maintenance</span>
+        <div class="case-metric">
+          <div class="stat">~1 hr</div>
+          <div class="case-metric-label">Monthly maintenance</div>
         </div>
       </div>
-      <div class="case-body">
-        <div>
-          <div class="case-section-label">Now, when a service ends, everything just happens</div>
-          <div class="case-pipeline">
-            <div class="pipeline-step">
-              <div class="step-num">1</div>
-              <div class="step-text"><strong>The recording becomes a polished outline document automatically</strong> — formatted the way the church likes it, scripture quotes corrected to the exact translation they use — and lands in the staff's inboxes the same afternoon. Nobody types a word.</div>
-            </div>
-            <div class="pipeline-step">
-              <div class="step-num">2</div>
-              <div class="step-text"><strong>Both websites update themselves</strong> — each new message posted with cleaned-up, consistent titles, and every video gets chapter markers and a searchable description within hours of going live. No one logs in to do it.</div>
-            </div>
-            <div class="pipeline-step">
-              <div class="step-num">3</div>
-              <div class="step-text"><strong>Announcements assemble themselves into a ready-to-send bulletin</strong> — a staff member reviews it and clicks one button. The system handles the sending, and members manage their own subscriptions through a simple portal.</div>
-            </div>
-          </div>
-          <p style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7;margin-top:var(--space-5)">The one place a human still touches the process is the one place a human <em>should</em>: nothing goes out to the congregation without a person approving it. Everything else runs unattended.</p>
-        </div>
-        <div>
-          <div class="case-section-label">The result</div>
-          <p style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">What previously consumed hours of staff time each week now runs entirely on its own. It's been in production since early 2026 and hasn't missed a service. It checks itself — I look at it about once a month. The staff stopped thinking about it, which was the whole point.</p>
-          <div style="margin-top:var(--space-6)">
-            <div class="case-section-label">Built for a business like yours</div>
-            <p style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">This wasn't built for a tech company. It was built for a small organization with no IT department, no engineers, and no patience for tools that need babysitting — exactly the situation most small businesses are in.</p>
-          </div>
-          <div style="margin-top:var(--space-6)">
-            <div class="case-section-label">What this means for your business</div>
-            <p style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.7">If a volunteer project I built for free runs this reliably, imagine what I'd build when it's your livelihood on the line and we're aligned on outcomes.</p>
-          </div>
-        </div>
+
+      <div class="case-result">
+        <div class="eyebrow">The result</div>
+        <p>What previously consumed hours of staff time each week now runs entirely on its own. It's been in production since early 2026 and hasn't missed a service. It checks itself — I look at it about once a month. The staff stopped thinking about it, which was the whole point.</p>
+        <p>The one place a human still touches the process is the one place a human should: nothing goes out to the congregation without a person approving it. Everything else runs unattended.</p>
       </div>
-      <a class="case-readmore" href="/portfolio/church-automation-pipeline/" style="display:inline-block;margin-top:var(--space-8);font-size:var(--text-sm);font-weight:600;color:var(--color-primary);text-decoration:none">Read the full case study — with the system diagram &rarr;</a>
+
+      <a class="btn btn--link" href="/portfolio/church-automation-pipeline/">Read the full case study — with the system diagram &rarr;</a>
     </div>
+
+    <p class="case-more">
+      <span class="case-more-label">More work:</span>
+      {more.map((m, i) => (
+        <Fragment>{i > 0 && <span class="case-sep" aria-hidden="true"> · </span>}<a href={m.href}>{m.label}</a></Fragment>
+      ))}
+      <span class="case-sep" aria-hidden="true"> · </span><a class="case-all" href="/portfolio/">All work →</a>
+    </p>
   </div>
 </section>
+
+<style>
+  .case-card {
+    max-width: 52rem; background: var(--color-surface); border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl); padding: clamp(var(--space-6), 4vw, var(--space-10));
+  }
+  .case-lead { font-size: var(--text-base); color: var(--color-text-muted); max-width: 60ch; }
+  .case-stats {
+    display: flex; flex-wrap: wrap; gap: var(--space-6) var(--space-12);
+    margin: var(--space-8) 0; padding: var(--space-6) 0;
+    border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);
+  }
+  .case-metric-label { font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-2); }
+  .case-result { max-width: 60ch; margin-bottom: var(--space-4); }
+  .case-result p { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.6; }
+  .case-result p + p { margin-top: var(--space-3); }
+  .case-more { margin-top: var(--space-6); font-size: var(--text-sm); line-height: 1.5; color: var(--color-text-muted); max-width: 52rem; }
+  .case-more a { color: var(--color-primary); text-decoration: none; font-weight: 600; }
+  .case-more a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .case-more-label { color: var(--color-text-muted); margin-right: var(--space-1); }
+</style>

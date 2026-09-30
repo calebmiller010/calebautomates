@@ -1,48 +1,73 @@
 ---
 // "The First Automation" — a low-risk ENTRY offer that makes a stranger's first "yes" easy
 // (2026-07-03, conversion-copy workflow, honesty-reviewed). Pricing stays number-free per
-// Caleb's default ("fixed price, agreed up front") — no invented number. Distinct highlighted
-// card so it reads as "start here," not a fourth service bucket.
-const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
+// Caleb's default ("fixed price, agreed up front") — no invented number. Process's four steps
+// were folded in here as "How it goes" (2026-09-30 redesign).
+import { BOOKING_URL, CONTACT_MAILTO, CTA_PRIMARY, CTA_EMAIL } from '../lib/links';
+
+const steps = [
+  { title: 'You describe the pain', desc: 'Tell me what you\'re doing manually and how often. A short conversation — no tech jargon required. I ask the questions.' },
+  { title: 'I scope the solution', desc: 'I map the automation, estimate build time, and give you a clear scope and price before anything is built. No surprises.' },
+  { title: 'I build and test it', desc: 'I test against real data and walk you through it before handoff.' },
+  { title: 'It runs. You forget it exists.', desc: 'That\'s the goal. The system works in the background. I\'m available if something ever needs adjusting.' },
+];
 ---
 
-<section id="first-automation">
+<section id="first-automation" class="section--tight">
   <div class="container">
     <div class="fa-card">
-      <div class="fa-badge">Start here</div>
-      <h2 class="fa-title">The First Automation</h2>
+      <div class="eyebrow fa-eyebrow">Start here</div>
+      <h2 class="title title--card fa-title">The First Automation</h2>
       <p class="fa-lead">Not ready for a full project? Start smaller. We use the free call to find one manual, repetitive task worth automating — then I build just that, for a fixed price agreed up front before any work starts. If it doesn’t work out, that’s on me to fix, not you to absorb.</p>
       <ul class="fa-list" role="list">
-        <li><span class="fa-check">✓</span> One working automation, live in your systems — not a platform, not “phase one.”</li>
-        <li><span class="fa-check">✓</span> Scope written down and agreed before I start, so “done” is defined up front.</li>
-        <li><span class="fa-check">✓</span> Me, directly, the whole way — I scope it, build it, and hand it off with a short doc.</li>
+        <li><span class="fa-check" aria-hidden="true">✓</span> One working automation, live in your systems — not a platform, not “phase one.”</li>
+        <li><span class="fa-check" aria-hidden="true">✓</span> Scope written down and agreed before I start, so “done” is defined up front.</li>
+        <li><span class="fa-check" aria-hidden="true">✓</span> Me, directly, the whole way — I scope it, build it, and hand it off with a short doc.</li>
       </ul>
-      <div class="fa-actions">
-        <a class="fa-btn" href={BOOKING_URL} target="_blank" rel="noopener">
-          Book the free call
+
+      <h3 class="title title--small fa-how">How it goes</h3>
+      <ol class="fa-steps" role="list">
+        {steps.map((s, i) => (
+          <li class="fa-step">
+            <span class="stat fa-step-num" aria-hidden="true">{i + 1}</span>
+            <div>
+              <div class="fa-step-title">{s.title}</div>
+              <p class="fa-step-desc">{s.desc}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      <p class="fa-terms">Most automations are built and running within a week. No long-term contracts — you pay for the system, not a retainer.</p>
+
+      <div class="btn-row">
+        <a class="btn btn--primary" href={BOOKING_URL} target="_blank" rel="noopener">
+          {CTA_PRIMARY}
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
         </a>
-        <span class="fa-foot">Scope &amp; price agreed in writing before any work starts.</span>
+        <a class="btn btn--link" href={CONTACT_MAILTO}>{CTA_EMAIL}</a>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  #first-automation { padding: clamp(var(--space-8), 5vw, var(--space-14)) 0; }
   .fa-card {
     max-width: 46rem; background: var(--color-surface); border: 1px solid var(--color-border);
     border-radius: var(--radius-xl); padding: clamp(var(--space-6), 4vw, var(--space-10));
     border-top: 3px solid var(--color-primary);
   }
-  .fa-badge { display: inline-block; font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-primary); margin-bottom: var(--space-3); }
-  .fa-title { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 400; color: var(--color-text); margin: 0 0 var(--space-3); }
-  .fa-lead { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.7; margin: 0 0 var(--space-5); max-width: 58ch; }
-  .fa-list { list-style: none; margin: 0 0 var(--space-6); padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
-  .fa-list li { display: flex; align-items: flex-start; gap: var(--space-3); font-size: var(--text-sm); color: var(--color-text); line-height: 1.6; }
+  .fa-eyebrow { color: var(--color-primary); }
+  .fa-title { margin: 0 0 var(--space-3); }
+  .fa-lead { font-size: var(--text-base); color: var(--color-text-muted); margin: 0 0 var(--space-5); max-width: 58ch; }
+  .fa-list { list-style: none; margin: 0 0 var(--space-8); padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+  .fa-list li { display: flex; align-items: flex-start; gap: var(--space-3); font-size: var(--text-sm); color: var(--color-text); }
   .fa-check { color: var(--color-primary); font-weight: 700; flex-shrink: 0; }
-  .fa-actions { display: flex; align-items: center; gap: var(--space-5); flex-wrap: wrap; }
-  .fa-btn { display: inline-flex; align-items: center; gap: var(--space-2); font-size: var(--text-base); font-weight: 600; color: var(--color-bg); background: var(--color-primary); padding: var(--space-3) var(--space-6); border-radius: var(--radius-full); text-decoration: none; transition: transform var(--transition), opacity var(--transition); }
-  .fa-btn:hover { transform: translateY(-1px); opacity: 0.95; }
-  .fa-foot { font-size: var(--text-xs); color: var(--color-text-muted); }
+  .fa-how { margin: 0 0 var(--space-4); padding-top: var(--space-6); border-top: 1px solid var(--color-border); }
+  .fa-steps { list-style: none; margin: 0 0 var(--space-6); padding: 0; display: flex; flex-direction: column; gap: var(--space-4); }
+  .fa-step { display: grid; grid-template-columns: 1.75rem 1fr; gap: var(--space-3); align-items: baseline; }
+  .fa-step-num { font-size: var(--text-lg); color: var(--color-primary); }
+  .fa-step-title { font-size: var(--text-base); font-weight: 600; color: var(--color-text); }
+  .fa-step-desc { font-size: var(--text-sm); color: var(--color-text-muted); margin: var(--space-1) 0 0; max-width: 54ch; }
+  .fa-terms { font-size: var(--text-sm); color: var(--color-text); font-weight: 500; margin: 0 0 var(--space-6); max-width: 54ch; }
 </style>

@@ -1,19 +1,34 @@
 ---
-// "The Cost of the Manual Way" calculator (2026-07-03). The site's primary interactive
-// conversion hook. Deliberately does arithmetic on the VISITOR'S OWN inputs — no claims about
-// Caleb, no benchmarks, no promised savings — so it carries zero fabrication risk for a
-// zero-track-record consultant. Self-contained inline script; ships in static output (no
-// hydration framework). v1 lead capture = a mailto pre-filled with the computed numbers
-// (a "not ready to book" visitor still lands in the inbox). See PLAN-first-client.md §4.
-const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
+// "What the manual way costs" calculator (2026-07-03; Problem merged in 2026-09-30). The site's
+// primary interactive conversion hook. Deliberately does arithmetic on the VISITOR'S OWN inputs —
+// no claims about Caleb, no benchmarks, no promised savings — so it carries zero fabrication risk.
+// Self-contained inline script; ships in static output (no hydration framework). Lead capture =
+// a mailto pre-filled with the computed numbers (address comes from lib/links.ts via a data
+// attribute, since the script runs in the browser).
+import { BOOKING_URL, EMAIL, CTA_PRIMARY } from '../lib/links';
+
+const pains = [
+  'Copying data between apps by hand every day',
+  'Sending the same follow-up emails manually each week',
+  'Generating the same reports from the same spreadsheets',
+  'Manually routing inbound leads or requests to the right person',
+  'Chasing down documents, signatures, or status updates',
+];
 ---
 
 <section id="cost-calculator">
   <div class="container">
-    <div class="calc-header">
-      <div class="problem-label">What it's actually costing you</div>
-      <h2 class="section-title">See the price tag on<br /><em>"we've always done it this way."</em></h2>
-      <p class="calc-sub">Rough math, not a quote — but it's usually the number that gets ignored until someone writes it down. Plug in one task your team repeats by hand.</p>
+    <div class="section-head calc-header">
+      <div class="eyebrow">What it costs</div>
+      <h2 class="title title--section">What the manual way costs</h2>
+      <p class="lede">Rough math, not a quote — but it’s usually the number that gets ignored until someone writes it down. Plug in one task your team repeats by hand.</p>
+    </div>
+
+    <div class="calc-familiar">
+      <p class="calc-familiar-label">Sound familiar?</p>
+      <ul class="calc-pains" role="list">
+        {pains.map((p) => <li>{p}</li>)}
+      </ul>
     </div>
 
     <div class="calc-card">
@@ -41,11 +56,11 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
         <p class="calc-output-lead"><span id="calc-taskname">This task</span> is costing your team an estimated</p>
         <div class="calc-metrics">
           <div class="calc-metric">
-            <div class="calc-metric-number" id="calc-hours-out">144</div>
+            <div class="stat calc-stat" id="calc-hours-out">144</div>
             <div class="calc-metric-label">hours per year</div>
           </div>
           <div class="calc-metric">
-            <div class="calc-metric-number" id="calc-cost-out">$5,040</div>
+            <div class="stat calc-stat" id="calc-cost-out">$5,040</div>
             <div class="calc-metric-label">per year</div>
           </div>
         </div>
@@ -55,14 +70,14 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
 
       <p class="calc-pivot">That's the kind of task that's usually worth automating first — repetitive, rule-based, done by hand mostly because nobody's gotten around to it. I can't promise this exact task is automatable without seeing it, but it's worth 20 minutes to find out for sure.</p>
 
-      <div class="calc-actions">
-        <a class="calc-book-btn" href={BOOKING_URL} target="_blank" rel="noopener">
-          Book a 20-minute call
+      <div class="btn-row calc-actions">
+        <a class="btn btn--primary" href={BOOKING_URL} target="_blank" rel="noopener">
+          {CTA_PRIMARY}
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
         </a>
-        <a class="calc-email-link" id="calc-mailto" href="mailto:caleb@calebautomates.com">or email me these numbers &rarr;</a>
+        <a class="btn btn--link" id="calc-mailto" href={'mailto:' + EMAIL} data-email={EMAIL}>or email me these numbers &rarr;</a>
       </div>
-      <p class="calc-xlink" style="margin-top:var(--space-6);font-size:var(--text-sm);color:var(--color-text-muted)">Not sure which task to start with? <a href="/quiz/" style="color:var(--color-primary)">Take the 2-minute automation quiz &rarr;</a></p>
+      <p class="calc-xlink">Not sure which task to start with? <a href="/quiz/">Take the 2-minute automation quiz &rarr;</a></p>
     </div>
   </div>
 </section>
@@ -74,6 +89,7 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
     const taskOut = $('calc-taskname'), hoursOut = $('calc-hours-out'), costOut = $('calc-cost-out'),
       weeksOut = $('calc-weeks'), mailto = $('calc-mailto');
     if (!hours) return;
+    const email = mailto.getAttribute('data-email');
     const clamp = (n, lo, hi, d) => (isFinite(n) && n > 0 ? Math.min(Math.max(n, lo), hi) : d);
     function recompute() {
       const hpw = clamp(parseFloat(hours.value), 0.5, 40, 3);
@@ -94,7 +110,7 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
         'Task: ' + name + '\nHours/week per person: ' + hpw + '\nPeople doing it: ' + ppl +
         '\nEstimated hourly cost: $' + rt + '\n\nEstimated annual cost: ~$' + annualCost.toLocaleString() +
         ' (' + annualHours.toLocaleString() + ' hours)\n\nWant to talk about whether this is automatable?';
-      mailto.href = 'mailto:caleb@calebautomates.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      mailto.href = 'mailto:' + email + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
     }
     [task, hours, people, rate].forEach((el) => el && el.addEventListener('input', recompute));
     recompute();
@@ -102,9 +118,12 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
 </script>
 
 <style>
-  #cost-calculator { padding: clamp(var(--space-16), 10vw, var(--space-24)) 0; }
-  .calc-header { max-width: 40rem; margin-bottom: var(--space-10); }
-  .calc-sub { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.7; max-width: 48ch; margin-top: var(--space-4); }
+  .calc-header { max-width: 40rem; }
+  .calc-familiar { max-width: 52rem; margin-bottom: var(--space-10); }
+  .calc-familiar-label { font-size: var(--text-sm); font-weight: 600; color: var(--color-text); margin-bottom: var(--space-3); }
+  .calc-pains { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .calc-pains li { font-size: var(--text-base); color: var(--color-text-muted); padding: var(--space-3) 0; border-top: 1px solid var(--color-border); }
+  .calc-pains li:last-child { border-bottom: 1px solid var(--color-border); }
   .calc-card {
     background: var(--color-surface); border: 1px solid var(--color-border);
     border-radius: var(--radius-xl); padding: clamp(var(--space-6), 4vw, var(--space-10));
@@ -117,29 +136,22 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
   .calc-field input {
     font: inherit; font-size: var(--text-base); color: var(--color-text);
     background: var(--color-bg); border: 1px solid var(--color-border);
-    border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); width: 100%;
+    border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); width: 100%; min-height: 44px;
     transition: border-color var(--transition);
   }
-  .calc-field input:focus { outline: none; border-color: var(--color-primary); }
+  .calc-field input:focus { border-color: var(--color-primary); }
+  .calc-field input:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
   .calc-hint { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.5; }
   .calc-output { margin-top: var(--space-8); padding-top: var(--space-8); border-top: 1px solid var(--color-border); }
   .calc-output-lead { font-size: var(--text-base); color: var(--color-text-muted); margin-bottom: var(--space-5); }
   .calc-metrics { display: flex; flex-wrap: wrap; gap: var(--space-8) var(--space-12); }
-  .calc-metric-number { font-family: var(--font-display, inherit); font-size: clamp(var(--text-3xl), 6vw, var(--text-5xl)); font-weight: 700; color: var(--color-text); line-height: 1; letter-spacing: -0.02em; }
+  .calc-stat { font-size: var(--text-2xl); }
   .calc-metric-label { font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-2); }
-  .calc-weeks { font-size: var(--text-base); color: var(--color-text); line-height: 1.6; margin-top: var(--space-6); font-weight: 500; }
-  .calc-disclaimer { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.6; margin-top: var(--space-5); font-style: italic; }
-  .calc-pivot { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.7; margin-top: var(--space-8); max-width: 54ch; }
-  .calc-actions { display: flex; align-items: center; gap: var(--space-6); flex-wrap: wrap; margin-top: var(--space-8); }
-  .calc-book-btn {
-    display: inline-flex; align-items: center; gap: var(--space-2);
-    font-size: var(--text-base); font-weight: 600; color: var(--color-bg);
-    background: var(--color-primary); padding: var(--space-4) var(--space-8);
-    border-radius: var(--radius-full); text-decoration: none;
-    transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
-  }
-  .calc-book-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(0,0,0,0.15); opacity: 0.95; }
-  .calc-email-link { font-size: var(--text-sm); font-weight: 500; color: var(--color-primary); text-decoration: none; }
-  .calc-email-link:hover { text-decoration: underline; }
+  .calc-weeks { font-size: var(--text-base); color: var(--color-text); margin-top: var(--space-6); font-weight: 500; }
+  .calc-disclaimer { font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-5); }
+  .calc-pivot { font-size: var(--text-base); color: var(--color-text-muted); margin-top: var(--space-8); max-width: 54ch; }
+  .calc-actions { margin-top: var(--space-8); gap: var(--space-6); }
+  .calc-xlink { margin-top: var(--space-6); font-size: var(--text-sm); color: var(--color-text-muted); }
+  .calc-xlink a { color: var(--color-primary); }
   @media (max-width: 680px) { .calc-inputs { grid-template-columns: 1fr; } }
 </style>

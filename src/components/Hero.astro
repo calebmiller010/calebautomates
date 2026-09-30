@@ -1,30 +1,27 @@
+---
+import { BOOKING_URL, CTA_PRIMARY } from '../lib/links';
+---
+
 <section id="hero">
   <div class="container">
-    <div class="hero-eyebrow fade-up fade-up-1">Automation &amp; Systems Consulting · Kansas City</div>
-    <h1 class="hero-title fade-up fade-up-2">Optimize the work.<br><em>Scale the business.</em></h1>
-    <p class="hero-sub fade-up fade-up-3">I help small businesses run leaner and grow — automating the repetitive work, connecting the tools that don’t talk to each other, and building systems that keep things moving when you’re not in the room.</p>
-    <div class="hero-actions fade-up fade-up-4">
-      <a href="#contact" class="btn-primary">
-        Tell me what's slowing you down
+    <div class="eyebrow">Automation &amp; Systems Consulting · Kansas City</div>
+    <h1 class="title title--hero hero-h1">Systems that run your business without you.</h1>
+    <p class="lede hero-lede">I help small businesses optimize and scale — automating the repetitive work, connecting the tools that don’t talk to each other, and building systems that keep running when you’re not in the room.</p>
+    <div class="btn-row">
+      <a href={BOOKING_URL} target="_blank" rel="noopener" class="btn btn--primary">
+        {CTA_PRIMARY}
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="/portfolio/" class="btn-ghost">See the work →</a>
+      <a href="/portfolio/" class="btn btn--link">See the work →</a>
     </div>
-    <p class="hero-guarantee fade-up fade-up-4" style="margin-top:var(--space-5);font-size:var(--text-sm);color:var(--color-text-muted);max-width:54ch">The first call is free — I'll find you at least 5 hours a week back, or tell you straight there's nothing worth building.</p>
-    <div class="hero-proof fade-up fade-up-5">
-      <div class="proof-stat">
-        <div class="proof-number">9 yrs</div>
-        <div class="proof-label">Building production software in healthcare, fintech &amp; government work</div>
-      </div>
-      <div class="proof-stat">
-        <div class="proof-number">~1M</div>
-        <div class="proof-label">Requests a day on healthcare systems I helped run</div>
-      </div>
-      <div class="proof-stat">
-        <div class="proof-number">Millions/yr</div>
-        <div class="proof-label">Projected savings from an integration platform I led</div>
-      </div>
-    </div>
-    <p class="hero-proof-note fade-up fade-up-5" style="margin-top:var(--space-6);font-size:var(--text-sm);color:var(--color-text-muted);max-width:52ch">Today I bring that same standard to small businesses and local organizations — <a href="/portfolio/" style="color:var(--color-primary)">see what’s running</a>.</p>
+    <p class="hero-note">The first call is free — I'll find you at least 5 hours a week back, or tell you straight there's nothing worth building.</p>
+    <p class="hero-note hero-proof-line">Nine years building production software in healthcare, fintech, and government work — now systems for small businesses and local organizations in Kansas City.</p>
   </div>
 </section>
+
+<style>
+  .hero-h1 { margin-bottom: var(--space-6); }
+  .hero-lede { margin-bottom: var(--space-8); }
+  .hero-note { margin-top: var(--space-5); font-size: var(--text-sm); line-height: 1.5; color: var(--color-text-muted); max-width: 54ch; }
+  .hero-proof-line { margin-top: var(--space-8); }
+</style>

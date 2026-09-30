@@ -9,3 +9,6 @@ Thumbs.db
 # Astro
 dist/
 .astro/
+
+# design-review screenshots (local only)
+_design-review/shots/

@@ -1,103 +1,34 @@
 ---
-// Focused, low-friction CTA (rebuilt 2026-07-03, take 2): the whole ask is "book a call"
-// (positioning.md's single offer). No embedded form — the Tally form was removed as not
-// useful. Lower-friction fallback for people not ready to book = a one-click prefilled email,
-// which needs zero form backend. Section renders on the fixed dark band from global.css.
-const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
-const MAILTO =
-  'mailto:caleb@calebautomates.com' +
-  '?subject=' + encodeURIComponent('A manual task I want to automate') +
-  '&body=' + encodeURIComponent("Hi Caleb — here's what my team keeps doing by hand:\n\n(what it is, roughly how often, and which tools are involved)\n\n");
+// Focused, low-friction CTA: the whole ask is "book a call". Fallback for people not ready to
+// book = a one-click prefilled email (no form backend). Renders on the fixed dark band
+// (#contact in global.css); colours come from the --band-* tokens so it stays theme-fixed.
+import { BOOKING_URL, CONTACT_MAILTO, CTA_PRIMARY } from '../lib/links';
 ---
 
-<section id="contact">
+<section id="contact" class="section--tight">
   <div class="container">
-    <h2 class="cta-headline">Find your easiest<br /><em>automation win.</em></h2>
+    <h2 class="title title--section cta-title">Start with a 20-minute call.</h2>
     <p class="cta-sub">
-      The whole first step is a free 20-minute call. I'll find at least 5 hours a week your team
-      could get back — or tell you straight there's nothing here. No pitch, no obligation.
+      The first call is free. I'll find at least 5 hours a week your team could get back — or tell you straight there's nothing here.
     </p>
 
-    <div class="cta-actions">
-      <a class="cta-book-btn" href={BOOKING_URL} target="_blank" rel="noopener">
-        Book a 20-minute call
+    <div class="btn-row cta-actions">
+      <a class="btn cta-primary" href={BOOKING_URL} target="_blank" rel="noopener">
+        {CTA_PRIMARY}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
       </a>
-      <a class="cta-email-link" href={MAILTO}>or just email me &rarr;</a>
+      <a class="btn btn--link cta-email" href={CONTACT_MAILTO}>or email me →</a>
     </div>
-
-    <ul class="cta-assurances" role="list">
-      <li class="cta-assurance">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
-        No sales pitch — just a conversation
-      </li>
-      <li class="cta-assurance">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
-        At least 5 hours a week back — or an honest "not yet"
-      </li>
-      <li class="cta-assurance">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
-        You talk to the person who builds it
-      </li>
-    </ul>
   </div>
 </section>
 
 <style>
-  .cta-actions {
-    margin-top: var(--space-8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-6);
-    flex-wrap: wrap;
-  }
-  .cta-book-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-size: var(--text-base);
-    font-weight: 600;
-    color: #171614;
-    background: #4f98a3;
-    padding: var(--space-4) var(--space-8);
-    border-radius: var(--radius-full);
-    text-decoration: none;
-    transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-  }
-  .cta-book-btn:hover {
-    background: #6bb3bd;
-    transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(79, 152, 163, 0.28);
-  }
-  .cta-email-link {
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: #8fc7cf;
-    text-decoration: none;
-  }
-  .cta-email-link:hover {
-    color: #b7dde2;
-    text-decoration: underline;
-  }
-  .cta-assurances {
-    list-style: none;
-    margin: var(--space-10) 0 0;
-    padding: 0;
-    display: inline-flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    text-align: left;
-  }
-  .cta-assurance {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    font-size: var(--text-sm);
-    color: rgba(244, 242, 238, 0.66);
-  }
-  .cta-assurance svg {
-    color: #6bb3bd;
-    flex-shrink: 0;
-  }
+  #contact { color: var(--band-text); }
+  .cta-title { color: var(--band-heading); max-width: none; margin-inline: auto; }
+  .cta-sub { color: var(--band-muted); font-size: var(--text-base); max-width: 48ch; margin: var(--space-4) auto 0; }
+  .cta-actions { margin-top: var(--space-8); justify-content: center; gap: var(--space-6); }
+  .cta-primary { background: var(--band-accent); color: var(--band-bg); }
+  .cta-primary:hover { background: var(--band-accent-hover); color: var(--band-bg); }
+  .cta-email { color: var(--band-accent-hover); }
+  .cta-email:hover { color: var(--band-heading); }
 </style>

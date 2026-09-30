@@ -8,15 +8,15 @@
 // by TAPPING a band (team-wide load, described in per-person units) — no typing, no math —
 // which is lower-friction AND removes the false-precision/edge-case failure modes of a
 // free-text hours field. Client-side only (no backend); lead capture = pre-filled mailto,
-// same idiom as CostCalculator.astro. Reuses design tokens + BOOKING_URL.
-const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
+// same idiom as CostCalculator.astro. Reuses design tokens + links.ts.
+import { BOOKING_URL, EMAIL, CTA_PRIMARY } from '../lib/links';
 ---
 
 <section id="automation-quiz">
   <div class="container">
     <div class="quiz-head">
-      <div class="problem-label">Free · about 2 minutes · no email needed</div>
-      <h1 class="quiz-title">What's all that manual work <em>really costing you?</em></h1>
+      <div class="eyebrow">Free · about 2 minutes · no email needed</div>
+      <h1 class="title title--section quiz-title">What's all that manual work really costing you?</h1>
       <p class="quiz-intro">Five quick taps about the work your team still does by hand — no typing, no math. You'll get an honest, rough estimate of the time and money on the table, built entirely from your own answers. No sign-up to see it.</p>
     </div>
 
@@ -29,7 +29,7 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
   </div>
 </section>
 
-<script is:inline define:vars={{ BOOKING_URL }}>
+<script is:inline define:vars={{ BOOKING_URL, EMAIL, CTA_PRIMARY }}>
   (function () {
     const root = document.getElementById('quiz-root');
     const backBtn = document.getElementById('quiz-back');
@@ -40,6 +40,8 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
     const statusEl = document.getElementById('quiz-status');
     if (!root) return;
     const BOOKING = BOOKING_URL;
+    const CONTACT_EMAIL = EMAIL;
+    const BOOK_LABEL = CTA_PRIMARY;
     // Web3Forms access key (public / client-safe — it only permits submitting this form,
     // which emails Caleb). Get one in ~30s at https://web3forms.com (enter your email).
     const W3F_KEY = '5353a62b-b901-4303-93a6-33663ed1addf';
@@ -83,6 +85,7 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
       { id: 'reporting', label: 'Reporting (assembling the same reports again and again)', frac: 0.55, service: 'auto-assembling your recurring reports' },
     ];
     const shortLabel = (a) => a.label.replace(/ \(.*/, '');
+    const CHECK_SVG = '<svg class="quiz-check" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false"><rect class="quiz-check-box" x="1.5" y="1.5" width="17" height="17" rx="4" /><path class="quiz-check-tick" d="M6 10.5l3 3 5-6" /></svg>';
 
     const freshState = () => ({ phase: 'A', aIdx: 0, a: {}, rate: DEFAULT_RATE, bSel: [], bIdx: 0, b: {} });
     let S = freshState();
@@ -130,14 +133,14 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
         'Team: ' + (S.a.team || '') + '\nMost manual work: ' + (S.a.where || '') + '\nTools it touches: ' + (S.a.tools || '') +
         '\nHow much of the week it swallows: ' + loadLabel(S.a.load) + '\nWhat the time back would buy: ' + (S.a.buy || '') +
         '\n\nEstimate: ' + rngH(e.lowHrs, e.highHrs) + ' hrs/yr (' + rngC(e.lowCost, e.highCost) + ' in staff time) at $' + S.rate + '/hr.\n\nCan we talk about whether this is automatable?';
-      return 'mailto:caleb@calebautomates.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      return 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
     }
     function mailtoB() {
       const b = estB();
       let body = "Hi Caleb — here's my deeper automation-quiz breakdown:\n\n";
       b.rows.forEach((r) => { body += '• ' + shortLabel(r.area) + ': ' + rngH(r.loH, r.hiH) + ' hrs/yr (' + rngC(r.loC, r.hiC) + ')\n'; });
       body += '\nTotal: ' + rngH(b.loH, b.hiH) + ' hrs/yr (' + rngC(b.loC, b.hiC) + ') at $' + S.rate + '/hr.\n\nWant to talk it through?';
-      return 'mailto:caleb@calebautomates.com?subject=' + encodeURIComponent('My back-office automation breakdown') + '&body=' + encodeURIComponent(body);
+      return 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent('My back-office automation breakdown') + '&body=' + encodeURIComponent(body);
     }
 
     // ---------- lead capture (Web3Forms — no backend) ----------
@@ -146,7 +149,7 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
         '<div class="quiz-lead-head">Want my take on this?</div>' +
         '<div class="quiz-lead-sub">Drop your email and I’ll review your answers and send back an honest read on what’s actually worth automating first. No list, no spam.</div>' +
         '<div class="quiz-lead-row"><input type="email" class="quiz-lead-email" name="email" placeholder="you@yourcompany.com" autocomplete="email" aria-label="Your email address" required />' +
-        '<button type="submit" class="quiz-lead-btn">Send my results →</button></div>' +
+        '<button type="submit" class="btn btn--primary quiz-lead-btn">Send my results →</button></div>' +
         '<div class="quiz-lead-msg" aria-live="polite"></div>' +
         '<input type="checkbox" class="quiz-lead-bot" name="botcheck" tabindex="-1" aria-hidden="true" autocomplete="off" />' +
         '</form>';
@@ -198,7 +201,7 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
       const q = A_Q[S.aIdx];
       setProgress(true, 15 + (S.aIdx / A_Q.length) * 85, 'Question ' + (S.aIdx + 1) + ' of ' + A_Q.length);
       backBtn.hidden = S.aIdx === 0;
-      root.innerHTML = '<div class="quiz-q">' + esc(q.q) + '</div>' +
+      root.innerHTML = '<div class="quiz-q title title--card">' + esc(q.q) + '</div>' +
         '<div class="quiz-opts">' + q.opts.map((o) => '<button class="quiz-opt' + (S.a[q.id] === o[0] ? ' sel' : '') + '" data-opt="' + o[0] + '" type="button">' + esc(o[1]) + '</button>').join('') + '</div>';
     }
 
@@ -209,18 +212,18 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
         '. It’s not a skills problem; it’s just work nobody’s automated yet. In my experience, the fix isn’t one big new system — it’s a handful of small, targeted automations that quietly kill the repetitive part. You said the time back would ' + (GOAL_PHRASE[S.a.buy] || 'help the business') + ' — that’s the kind of win worth going after first.';
       root.innerHTML =
         '<div class="quiz-result">' +
-        '<div class="quiz-arch">You’re running <em>' + esc(arch) + '</em>.</div>' +
-        '<div class="quiz-metrics"><div class="quiz-metric"><div class="quiz-metric-num">' + rngH(e.lowHrs, e.highHrs) + '</div><div class="quiz-metric-label">hours a year</div></div>' +
-        '<div class="quiz-metric"><div class="quiz-metric-num">' + rngC(e.lowCost, e.highCost) + '</div><div class="quiz-metric-label">in staff time, per year</div></div></div>' +
+        '<div class="quiz-arch title title--card">You’re running ' + esc(arch) + '.</div>' +
+        '<div class="quiz-metrics"><div class="quiz-metric"><div class="quiz-metric-num stat">' + rngH(e.lowHrs, e.highHrs) + '</div><div class="quiz-metric-label">hours a year</div></div>' +
+        '<div class="quiz-metric"><div class="quiz-metric-num stat">' + rngC(e.lowCost, e.highCost) + '</div><div class="quiz-metric-label">in staff time, per year</div></div></div>' +
         '<div class="quiz-rate">at <input type="number" id="quiz-rate" inputmode="decimal" min="10" max="500" step="5" value="' + S.rate + '" class="quiz-rate-input" aria-label="Fully-loaded hourly cost" />/hr fully-loaded ' +
         '<span class="quiz-rate-hint">(salary ÷ 2,000 + ~25–30% for overhead — or just estimate)</span></div>' +
         '<p class="quiz-disclaimer">These numbers are your own — your answers, times a full working year, shown as a range. It’s a rough estimate to make the size of the problem visible, not an audit and not a promise. Whether these specific tasks are worth automating is exactly what the free call is for.</p>' +
         '<p class="quiz-read">' + read + '</p>' +
-        '<div class="quiz-actions"><a class="quiz-book" href="' + BOOKING + '" target="_blank" rel="noopener">Book a free 20-minute call</a></div>' +
+        '<div class="quiz-actions"><a class="btn btn--primary" href="' + BOOKING + '" target="_blank" rel="noopener">' + esc(BOOK_LABEL) + '</a></div>' +
         leadForm('quiz-a') +
         '<div class="quiz-deeper"><div class="quiz-deeper-head">Want a sharper number?</div>' +
         '<div class="quiz-deeper-sub">Two more minutes: break your back office down area-by-area for an itemized read.</div>' +
-        '<button class="quiz-deeper-link" id="quiz-go-b" type="button">Go deeper — the 2-minute diagnostic →</button></div>' +
+        '<button class="btn btn--link quiz-deeper-link" id="quiz-go-b" type="button">Go deeper — the 2-minute diagnostic →</button></div>' +
         '<div class="quiz-foot"><button class="quiz-restart" id="quiz-restart" type="button">↺ Start over</button>' +
         '<button class="quiz-share" id="quiz-share" type="button">↗ Share this</button></div>' +
         '<div class="quiz-xlink">Want to sanity-check one specific task instead? <a href="/#cost-calculator">Try the quick cost calculator →</a></div>' +
@@ -229,15 +232,15 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
 
     function renderBSelect() {
       setProgress(true, 20, 'Deeper dive · areas'); backBtn.hidden = false;
-      root.innerHTML = '<div class="quiz-q">Which of these eat the most time? <span class="quiz-q-sub">Pick any that apply.</span></div>' +
-        '<div class="quiz-opts">' + B_AREAS.map((a) => '<button class="quiz-opt multi' + (S.bSel.includes(a.id) ? ' sel' : '') + '" data-area="' + a.id + '" type="button" aria-pressed="' + (S.bSel.includes(a.id) ? 'true' : 'false') + '">' + esc(a.label) + '</button>').join('') + '</div>' +
-        '<button class="quiz-next" id="quiz-b-go" type="button"' + (S.bSel.length ? '' : ' disabled') + '>Continue →</button>';
+      root.innerHTML = '<div class="quiz-q title title--card">Which of these eat the most time? <span class="quiz-q-sub">Pick any that apply.</span></div>' +
+        '<div class="quiz-opts">' + B_AREAS.map((a) => '<button class="quiz-opt multi' + (S.bSel.includes(a.id) ? ' sel' : '') + '" data-area="' + a.id + '" type="button" aria-pressed="' + (S.bSel.includes(a.id) ? 'true' : 'false') + '">' + CHECK_SVG + '<span>' + esc(a.label) + '</span></button>').join('') + '</div>' +
+        '<button class="btn btn--primary quiz-next" id="quiz-b-go" type="button"' + (S.bSel.length ? '' : ' disabled') + '>Continue →</button>';
     }
 
     function renderBFollow() {
       const id = S.bSel[S.bIdx]; const area = B_AREAS.find((x) => x.id === id);
       setProgress(true, 20 + ((S.bIdx + 1) / (S.bSel.length + 1)) * 80, 'Deeper dive · ' + (S.bIdx + 1) + ' of ' + S.bSel.length); backBtn.hidden = false;
-      root.innerHTML = '<div class="quiz-q">For <em>' + esc(shortLabel(area)) + '</em>, how much time a week does your team spend on that?</div>' +
+      root.innerHTML = '<div class="quiz-q title title--card">For ' + esc(shortLabel(area)) + ', how much time a week does your team spend on that?</div>' +
         '<div class="quiz-opts">' + LOAD_BANDS.map((b) => '<button class="quiz-opt' + (S.b[id] === b[0] ? ' sel' : '') + '" data-bband="' + b[0] + '" type="button">' + esc(b[1]) + '</button>').join('') + '</div>';
     }
 
@@ -245,9 +248,9 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
       setProgress(false); backBtn.hidden = false;
       const b = estB();
       if (!b.rows.length) {
-        root.innerHTML = '<div class="quiz-result"><div class="quiz-arch">Not much on the table here.</div>' +
+        root.innerHTML = '<div class="quiz-result"><div class="quiz-arch title title--card">Not much on the table here.</div>' +
           '<p class="quiz-read">Based on what you told me, none of those areas is eating meaningful time right now — which is genuinely good news. If something else is the real drag, the quickest way to find it is a short call.</p>' +
-          '<div class="quiz-actions"><a class="quiz-book" href="' + BOOKING + '" target="_blank" rel="noopener">Book a free 20-minute call</a></div>' +
+          '<div class="quiz-actions"><a class="btn btn--primary" href="' + BOOKING + '" target="_blank" rel="noopener">' + esc(BOOK_LABEL) + '</a></div>' +
           '<div class="quiz-foot"><button class="quiz-restart" id="quiz-restart" type="button">↺ Start over</button></div></div>';
         return;
       }
@@ -259,14 +262,14 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
         'the first move I’d look at is ' + svc[0] + ', then ' + svc.slice(1).join(', then ') + '.';
       root.innerHTML =
         '<div class="quiz-result">' +
-        '<div class="quiz-arch">Your back office, <em>itemized.</em></div>' +
+        '<div class="quiz-arch title title--card">Your back office, itemized.</div>' +
         '<div class="quiz-brows">' + rowsHtml + '</div>' +
-        '<div class="quiz-metrics"><div class="quiz-metric"><div class="quiz-metric-num">' + rngH(b.loH, b.hiH) + '</div><div class="quiz-metric-label">total hours a year</div></div>' +
-        '<div class="quiz-metric"><div class="quiz-metric-num">' + rngC(b.loC, b.hiC) + '</div><div class="quiz-metric-label">in staff time, per year</div></div></div>' +
+        '<div class="quiz-metrics"><div class="quiz-metric"><div class="quiz-metric-num stat">' + rngH(b.loH, b.hiH) + '</div><div class="quiz-metric-label">total hours a year</div></div>' +
+        '<div class="quiz-metric"><div class="quiz-metric-num stat">' + rngC(b.loC, b.hiC) + '</div><div class="quiz-metric-label">in staff time, per year</div></div></div>' +
         '<p class="quiz-read">Based on what you told me, your biggest time sink is <strong>' + esc(shortLabel(top.area)) + '</strong>, so ' + svcLine + ' That’s usually where automation shows up fastest — though what’s actually easiest to automate depends on the specifics, which is what the call is for.</p>' +
         '<details class="quiz-math"><summary>Show the math</summary><div class="quiz-math-body">Each area = the weekly-hours band you picked × 48 working weeks × a recoverable fraction (the share a computer can realistically take over), shown as a range from the band. The fractions I use: data movement ~70%, follow-ups/reconciliation ~60%, reporting ~55%. These are honest planning assumptions, not a measurement of your business. Dollar figures use $' + S.rate + '/hr (set on the first result screen).</div></details>' +
         '<p class="quiz-disclaimer">A planning estimate from your own answers — not an audit or a guarantee. What’s actually automatable (and worth it) is what the free call figures out.</p>' +
-        '<div class="quiz-actions"><a class="quiz-book" href="' + BOOKING + '" target="_blank" rel="noopener">Book a free 20-minute call</a></div>' +
+        '<div class="quiz-actions"><a class="btn btn--primary" href="' + BOOKING + '" target="_blank" rel="noopener">' + esc(BOOK_LABEL) + '</a></div>' +
         leadForm('quiz-b') +
         '<div class="quiz-foot"><button class="quiz-restart" id="quiz-restart" type="button">↺ Start over</button>' +
         '<button class="quiz-share" id="quiz-share" type="button">↗ Share this</button></div>' +
@@ -313,7 +316,7 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
       const btn = form.querySelector('.quiz-lead-btn'); btn.disabled = true; btn.textContent = 'Sending…'; msg.textContent = ''; msg.className = 'quiz-lead-msg';
       submitLead(email, form.getAttribute('data-kind')).then((ok) => {
         if (ok) { form.innerHTML = '<div class="quiz-lead-done">✓ Got it — I’ll take a look and be in touch soon. Want to skip ahead? <a href="' + BOOKING + '" target="_blank" rel="noopener">Book a call</a>.</div>'; statusEl.textContent = 'Sent — Caleb will be in touch.'; }
-        else { btn.disabled = false; btn.textContent = 'Send my results →'; msg.textContent = 'That didn’t go through — try again, or email caleb@calebautomates.com.'; msg.className = 'quiz-lead-msg err'; }
+        else { btn.disabled = false; btn.textContent = 'Send my results →'; msg.textContent = 'That didn’t go through — try again, or email ' + CONTACT_EMAIL + '.'; msg.className = 'quiz-lead-msg err'; }
       });
     });
     backBtn.addEventListener('click', () => {
@@ -333,52 +336,51 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
   /* Global (not scoped): the quiz DOM is injected client-side via innerHTML, so those
      elements never carry Astro's scoping attribute — scoped rules would not match them.
      All selectors below are unique to this component (#automation-quiz / .quiz-*). */
-  #automation-quiz { padding: clamp(var(--space-12), 8vw, var(--space-20)) 0; --quiz-muted: #5f5d57; }
-  [data-theme="dark"] #automation-quiz { --quiz-muted: #9a9a97; }
+  #automation-quiz { padding: var(--section-y) 0; }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   .quiz-head { max-width: 42rem; margin-bottom: var(--space-8); }
-  .quiz-title { font-family: var(--font-display); font-size: clamp(var(--text-2xl), 6vw, var(--text-4xl, var(--text-2xl))); font-weight: 400; color: var(--color-text); line-height: 1.1; margin: var(--space-2) 0; }
-  .quiz-title em { font-style: italic; color: var(--color-primary); }
-  .quiz-intro { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.7; max-width: 54ch; }
+  .quiz-title { margin-bottom: var(--space-4); }
+  .quiz-intro { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.6; max-width: 54ch; }
   .quiz-shell { max-width: 40rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: clamp(var(--space-6), 4vw, var(--space-10)); position: relative; }
+  /* padding-right keeps the absolutely-positioned Back button clear of the "Question n of 5" label */
   .quiz-progress { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6); padding-right: 6rem; }
   .quiz-progress-bar { flex: 1; height: 6px; background: var(--color-bg); border-radius: var(--radius-full); overflow: hidden; }
   .quiz-progress-bar span { display: block; height: 100%; background: var(--color-primary); transition: width var(--transition); }
   .quiz-progress-label { font-size: var(--text-xs); color: var(--color-text-muted); white-space: nowrap; }
   .quiz-back { position: absolute; top: var(--space-4); right: var(--space-5); background: none; border: none; font: inherit; font-size: var(--text-sm); color: var(--color-text-muted); cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; padding: 0 var(--space-2); }
   .quiz-back:hover { color: var(--color-text); }
-  .quiz-q { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 400; color: var(--color-text); line-height: 1.3; margin-bottom: var(--space-6); outline: none; }
-  .quiz-q-sub, .quiz-q em { font-family: var(--font-display); font-style: italic; color: var(--color-primary); font-size: 0.9em; }
-  .quiz-q-sub { font-size: var(--text-sm); color: var(--color-text-muted); font-style: normal; display: block; margin-top: 4px; }
+  /* .quiz-q / .quiz-arch get programmatic focus (tabindex -1) on each step, so no ring on the heading itself */
+  .quiz-q { margin-bottom: var(--space-6); outline: none; }
+  .quiz-q-sub { font-family: var(--font-body); font-weight: 400; font-size: var(--text-sm); color: var(--color-text-muted); display: block; margin-top: var(--space-1); }
   .quiz-opts { display: flex; flex-direction: column; gap: var(--space-3); }
   .quiz-opt { text-align: left; font: inherit; font-size: var(--text-base); color: var(--color-text); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); cursor: pointer; min-height: 44px; transition: border-color var(--transition), background var(--transition); }
   .quiz-opt:hover { border-color: var(--color-primary); }
   .quiz-opt.sel { border-color: var(--color-primary); background: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg)); }
-  .quiz-opt.multi::before { content: '○ '; color: var(--color-text-faint); }
-  .quiz-opt.multi.sel::before { content: '● '; color: var(--color-primary); }
-  .quiz-next { margin-top: var(--space-6); display: inline-flex; align-items: center; font: inherit; font-size: var(--text-base); font-weight: 600; color: var(--color-bg); background: var(--color-primary); border: none; padding: var(--space-3) var(--space-6); border-radius: var(--radius-full); cursor: pointer; min-height: 44px; }
-  .quiz-next[disabled] { opacity: 0.4; cursor: not-allowed; }
+  .quiz-opt.multi { display: flex; align-items: flex-start; gap: var(--space-3); }
+  .quiz-check { flex-shrink: 0; margin-top: 2px; }
+  .quiz-check-box { fill: none; stroke: var(--color-text-muted); stroke-width: 1.5; }
+  .quiz-check-tick { fill: none; stroke: var(--color-bg); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+  .quiz-opt.multi.sel .quiz-check-box { fill: var(--color-primary); stroke: var(--color-primary); }
+  .quiz-opt.multi.sel .quiz-check-tick { opacity: 1; }
+  .quiz-next { margin-top: var(--space-6); }
+  .quiz-next[disabled], .quiz-lead-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   /* result */
-  .quiz-arch { font-family: var(--font-display); font-size: var(--text-xl); color: var(--color-text); margin-bottom: var(--space-6); outline: none; }
-  .quiz-arch em { font-style: italic; color: var(--color-primary); }
+  .quiz-arch { margin-bottom: var(--space-6); outline: none; }
   .quiz-metrics { display: flex; flex-wrap: wrap; gap: var(--space-6) var(--space-10); margin-bottom: var(--space-4); }
-  .quiz-metric-num { font-family: var(--font-display); font-size: clamp(var(--text-2xl), 6vw, var(--text-4xl, var(--text-2xl))); color: var(--color-text); line-height: 1; }
+  .quiz-metric .quiz-metric-num { font-size: var(--text-2xl); }
   .quiz-metric-label { font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-2); }
   .quiz-rate { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-5); }
   .quiz-rate-input { font: inherit; width: 4.5rem; padding: 4px 8px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); color: var(--color-text); }
-  .quiz-rate-hint { display: block; font-size: var(--text-xs); color: var(--quiz-muted); margin-top: 4px; }
-  .quiz-disclaimer { font-size: var(--text-xs); color: var(--quiz-muted); font-style: italic; line-height: 1.6; margin: var(--space-4) 0; }
-  .quiz-read { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.7; margin: var(--space-5) 0; }
+  .quiz-rate-input:focus-visible, .quiz-lead-email:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-color: var(--color-primary); }
+  .quiz-rate-hint { display: block; font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-1); }
+  .quiz-disclaimer { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.6; margin: var(--space-4) 0; }
+  .quiz-read { font-size: var(--text-base); color: var(--color-text-muted); line-height: 1.6; margin: var(--space-5) 0; }
   .quiz-read strong { color: var(--color-text); }
   .quiz-deeper { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-5); margin: var(--space-6) 0; }
   .quiz-deeper-head { font-size: var(--text-base); font-weight: 600; color: var(--color-text); }
-  .quiz-deeper-sub { font-size: var(--text-sm); color: var(--color-text-muted); margin: 4px 0 0; }
-  .quiz-deeper-link { margin-top: var(--space-4); background: none; border: none; font: inherit; font-size: var(--text-sm); font-weight: 600; color: var(--color-primary); cursor: pointer; padding: var(--space-2) 0; min-height: 44px; display: inline-flex; align-items: center; }
-  .quiz-deeper-link:hover { text-decoration: underline; }
+  .quiz-deeper-sub { font-size: var(--text-sm); color: var(--color-text-muted); margin: var(--space-1) 0 0; }
+  .quiz-deeper-link { margin-top: var(--space-3); text-align: left; white-space: normal; }
   .quiz-actions { display: flex; align-items: center; gap: var(--space-5); flex-wrap: wrap; margin-top: var(--space-6); }
-  .quiz-book { font-size: var(--text-base); font-weight: 600; color: var(--color-bg); background: var(--color-primary); padding: var(--space-4) var(--space-8); border-radius: var(--radius-full); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
-  .quiz-book:hover { opacity: 0.95; }
-  .quiz-email { font-size: var(--text-sm); font-weight: 500; color: var(--color-primary); text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
   .quiz-foot { display: flex; align-items: center; gap: var(--space-6); flex-wrap: wrap; margin-top: var(--space-5); }
   .quiz-restart, .quiz-share { background: none; border: none; font: inherit; font-size: var(--text-sm); color: var(--color-text-muted); cursor: pointer; padding: 0; min-height: 44px; display: inline-flex; align-items: center; }
   .quiz-restart:hover, .quiz-share:hover { color: var(--color-text); }
@@ -390,18 +392,16 @@ const BOOKING_URL = 'https://calendar.app.google/NUxmMR4GipiHsD7d9';
   .quiz-brow-val { font-size: var(--text-sm); color: var(--color-text-muted); }
   .quiz-math { margin: var(--space-4) 0; }
   .quiz-math summary { font-size: var(--text-sm); color: var(--color-primary); cursor: pointer; }
-  .quiz-math-body { font-size: var(--text-xs); color: var(--quiz-muted); line-height: 1.65; margin-top: var(--space-3); }
+  .quiz-math-body { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.6; margin-top: var(--space-3); }
   /* lead capture */
   .quiz-lead { margin-top: var(--space-6); background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-5); }
   .quiz-lead-head { font-size: var(--text-base); font-weight: 600; color: var(--color-text); }
-  .quiz-lead-sub { font-size: var(--text-sm); color: var(--color-text-muted); margin: 4px 0 var(--space-4); line-height: 1.5; }
+  .quiz-lead-sub { font-size: var(--text-sm); color: var(--color-text-muted); margin: var(--space-1) 0 var(--space-4); line-height: 1.5; }
   .quiz-lead-row { display: flex; gap: var(--space-3); flex-wrap: wrap; }
   .quiz-lead-email { flex: 1 1 12rem; min-width: 0; font: inherit; font-size: var(--text-base); color: var(--color-text); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); min-height: 44px; }
-  .quiz-lead-email:focus { outline: none; border-color: var(--color-primary); }
-  .quiz-lead-btn { font: inherit; font-size: var(--text-base); font-weight: 600; color: var(--color-bg); background: var(--color-primary); border: none; border-radius: var(--radius-full); padding: var(--space-3) var(--space-6); cursor: pointer; min-height: 44px; white-space: nowrap; }
-  .quiz-lead-btn:disabled { opacity: 0.6; cursor: default; }
-  .quiz-lead-msg { font-size: var(--text-sm); margin-top: var(--space-3); color: var(--quiz-muted); }
+  .quiz-lead-msg { font-size: var(--text-sm); margin-top: var(--space-3); color: var(--color-text-muted); }
   .quiz-lead-msg.err { color: #c0392b; }
+  [data-theme="dark"] .quiz-lead-msg.err { color: #e57f72; }
   .quiz-lead-done { font-size: var(--text-base); color: var(--color-text); line-height: 1.6; }
   .quiz-lead-done a { color: var(--color-primary); }
   .quiz-lead-bot { position: absolute; left: -9999px; }

@@ -1,41 +1,68 @@
+---
+// About + Experience merged (2026-09-30 redesign): three short paragraphs, the credential lines,
+// then the longer Experience prose behind a native <details>. No headshot yet (owner has none).
+const credentials = [
+  'Production systems that run for months without babysitting',
+  'An integration platform I led — projected to save millions a year in onboarding time',
+  'Independent consulting on government healthcare work (FHIR, HL7, security)',
+  'You work directly with the person building it',
+  'Kansas City-based · Available for remote projects',
+];
+---
+
 <section id="about">
   <div class="container">
-    <div class="about-grid">
+    <div class="about-col">
+      <div class="section-head">
+        <div class="eyebrow">The person doing the work</div>
+        <h2 class="title title--section">About Caleb</h2>
+      </div>
+
       <div class="about-body">
-        <div class="problem-label">About</div>
-        <h2 class="section-title">I build for outcomes,<br><em>not for show.</em></h2>
-        <p>I've spent nearly a decade building systems that keep real businesses running — fintech platforms, healthcare systems, government health-data work, and, more recently, automations and software for local organizations, including a system that runs a 200-member church's weekly content routine without anyone touching it. The through-line isn't the technology. It's that every system had to work reliably, day after day, because real people depended on it.</p>
+        <p>I've spent nearly a decade building systems that keep real businesses running — fintech platforms, healthcare systems, government health-data work, and, more recently, automations and software for local organizations. The through-line isn't the technology. It's that every system had to work reliably, day after day, because real people depended on it.</p>
         <p>I started using AI tools early because they let me deliver faster without cutting corners. A project that used to take weeks now takes days. That means you get a working system in your hands sooner, and we can refine it together based on how you actually use it.</p>
         <p><strong>I'm not an agency.</strong> I'm one person who does the work. When you hire me, you talk to the builder. No handoffs, no junior developers, no surprises.</p>
-        <div class="credentials">
-          <div class="credential"><div class="credential-dot"></div>Production systems that run for months without babysitting</div>
-          <div class="credential"><div class="credential-dot"></div>An integration platform I led — projected to save millions a year in onboarding time</div>
-          <div class="credential"><div class="credential-dot"></div>Independent consulting on government healthcare work (FHIR, HL7, security)</div>
-          <div class="credential"><div class="credential-dot"></div>You work directly with the person building it</div>
-          <div class="credential"><div class="credential-dot"></div>Kansas City-based · Available for remote projects</div>
-        </div>
       </div>
-      <div class="about-visual">
-        <div style="font-size:var(--text-base);font-weight:600;color:var(--color-text);margin-bottom:var(--space-4)">What working with me looks like</div>
-        <div style="display:flex;flex-direction:column;gap:var(--space-4)">
-          <div>
-            <div style="font-size:var(--text-sm);font-weight:600;color:var(--color-text);margin-bottom:2px">A working system in days</div>
-            <div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6">Most automations are built and running within a week. You'll see progress immediately, not after a month of meetings.</div>
-          </div>
-          <div style="border-top:1px solid var(--color-border);padding-top:var(--space-4)">
-            <div style="font-size:var(--text-sm);font-weight:600;color:var(--color-text);margin-bottom:2px">Built to run without you</div>
-            <div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6">I design systems that don't need daily attention. Set it up, let it run, and check in when you want to — not because you have to.</div>
-          </div>
-          <div style="border-top:1px solid var(--color-border);padding-top:var(--space-4)">
-            <div style="font-size:var(--text-sm);font-weight:600;color:var(--color-text);margin-bottom:2px">Clear communication, always</div>
-            <div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6">No jargon, no status reports that obscure reality. I'll tell you what's working, what's not, and what it takes to fix it.</div>
-          </div>
-          <div style="border-top:1px solid var(--color-border);padding-top:var(--space-4)">
-            <div style="font-size:var(--text-sm);font-weight:600;color:var(--color-text);margin-bottom:2px">No long-term contracts</div>
-            <div style="font-size:var(--text-sm);color:var(--color-text-muted);line-height:1.6">You pay for the system, not a retainer. If something needs adjusting later, we'll handle it when it comes up.</div>
-          </div>
+
+      <ul class="about-creds" role="list">
+        {credentials.map((c) => (
+          <li><span class="about-dot" aria-hidden="true"></span>{c}</li>
+        ))}
+      </ul>
+
+      <details class="about-more">
+        <summary class="about-more-summary">The longer version — nine years of production systems</summary>
+        <div class="about-more-body">
+          <p>For nine years I've built the systems businesses can't afford to have fail — in healthcare, fintech, and government work, and now for small businesses. The numbers are the point.</p>
+          <p>At a healthcare-technology company, I helped build and run patient-data services handling roughly <strong>a million API requests a day</strong> under HIPAA and GDPR — the kind of system where a bug doesn't just look bad, it breaks federal healthcare law. As technical lead on an integration platform at a fintech company, I led the architecture for a system that automated customer file-mapping — slow, manual engineering work on every new customer. The company projected it would save <strong>millions of dollars a year</strong> in onboarding time.</p>
+          <p>As an independent consultant, I worked on a government healthcare project — health-data interoperability with <strong>FHIR and HL7</strong>, and hardening the codebase by fixing a batch of known security vulnerabilities (CVEs).</p>
+          <p>I built an internal AI tool that turns raw specs into working configuration, collapsing days of manual setup into a single afternoon. And earlier, on the healthcare side, I cut a core test suite's runtime by <strong>80%</strong> and a key query's time by <strong>60%</strong> — not by throwing hardware at the problem, but by fixing how the systems were built. Not demos. Systems people relied on every day.</p>
+          <p>That's the bar I build to: production systems that handle real volume and run unattended. It's exactly what your busywork deserves — built right the first time, and designed to run without you.</p>
         </div>
-      </div>
+      </details>
     </div>
   </div>
 </section>
+
+<style>
+  .about-col { max-width: 46rem; }
+  .about-body p { font-size: var(--text-base); color: var(--color-text-muted); max-width: 60ch; }
+  .about-body p + p, .about-more-body p + p { margin-top: var(--space-4); }
+  .about-body strong, .about-more-body strong { color: var(--color-text); font-weight: 600; }
+  .about-creds { list-style: none; margin: var(--space-8) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+  .about-creds li { display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted); }
+  .about-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-primary); flex-shrink: 0; }
+
+  .about-more { margin-top: var(--space-8); border-top: 1px solid var(--color-border); padding-top: var(--space-2); }
+  .about-more-summary {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+    min-height: 44px; cursor: pointer; list-style: none;
+    font-size: var(--text-sm); font-weight: 600; color: var(--color-primary);
+  }
+  .about-more-summary::-webkit-details-marker { display: none; }
+  .about-more-summary::after { content: '+'; flex-shrink: 0; }
+  .about-more[open] .about-more-summary::after { content: '−'; }
+  .about-more-summary:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .about-more-body { margin-top: var(--space-4); }
+  .about-more-body p { font-size: var(--text-base); color: var(--color-text-muted); max-width: 60ch; }
+</style>

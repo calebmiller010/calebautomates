@@ -4,10 +4,10 @@
 // ("let people manage their own list so you never touch a spreadsheet"). Generalized + show-safe.
 // Compact horizontal flow (wraps on mobile). Pure CSS, no JS.
 const steps = [
-  { icon: '📝', label: 'Someone submits the form', biz: 'your inbound interest', desc: 'Name, email, and what they want to hear about — a public form, no login.' },
-  { icon: '🔀', label: 'Matched or created', biz: 'no manual list edits', desc: 'The system finds their record by token or makes a new one. Nobody edits a list by hand.' },
-  { icon: '🔑', label: 'Saved & secured', biz: 'your data updates itself', desc: 'The record is written and issued a private access token — the source of truth stays current on its own.' },
-  { icon: '✉️', label: 'The right email goes out', biz: 'your people stay in control', desc: 'A welcome for new folks, or a passwordless magic-link to manage their own preferences.' },
+  { label: 'Someone submits the form', biz: 'your inbound interest', desc: 'Name, email, and what they want to hear about — a public form, no login.' },
+  { label: 'Matched or created', biz: 'no manual list edits', desc: 'The system finds their record by token or makes a new one. Nobody edits a list by hand.' },
+  { label: 'Saved & secured', biz: 'your data updates itself', desc: 'The record is written and issued a private access token — the source of truth stays current on its own.' },
+  { label: 'The right email goes out', biz: 'your people stay in control', desc: 'A welcome for new folks, or a passwordless magic-link to manage their own preferences.' },
 ];
 ---
 
@@ -18,7 +18,7 @@ const steps = [
   <ol class="micro-flow" role="list">
     {steps.map((s, i) => (
       <li class="micro-node">
-        <div class="micro-icon" aria-hidden="true">{s.icon}</div>
+        <div class="micro-num" aria-hidden="true">{i + 1}</div>
         <div class="micro-label">{s.label}</div>
         <div class="micro-biz">{s.biz}</div>
         <div class="micro-desc">{s.desc}</div>
@@ -31,16 +31,16 @@ const steps = [
 
 <style>
   .micro { margin: var(--space-10) 0 var(--space-4); }
-  .micro-intro { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.7; max-width: 60ch; margin-bottom: var(--space-6); }
+  .micro-intro { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.6; max-width: 60ch; margin-bottom: var(--space-6); }
   .micro-intro strong { color: var(--color-text); }
   .micro-flow { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--space-3); align-items: stretch; }
-  .micro-node { position: relative; flex: 1 1 0; min-width: 0; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg, var(--radius-md)); padding: var(--space-4); }
-  .micro-icon { font-size: var(--text-lg); margin-bottom: var(--space-2); }
+  .micro-node { margin: 0; position: relative; flex: 1 1 0; min-width: 0; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg, var(--radius-md)); padding: var(--space-4); }
+  .micro-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: var(--text-xs); font-weight: 600; color: var(--color-primary); border: 1.5px solid var(--color-primary); margin-bottom: var(--space-3); }
   .micro-label { font-size: var(--text-sm); font-weight: 600; color: var(--color-text); line-height: 1.3; }
   .micro-biz { font-size: var(--text-xs); font-weight: 500; color: var(--color-primary); margin-top: 2px; }
   .micro-desc { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.55; margin-top: var(--space-2); }
-  .micro-arrow { position: absolute; right: calc(-1 * var(--space-3) - 3px); top: 50%; transform: translateY(-50%); color: var(--color-text-faint); font-size: var(--text-base); z-index: 1; }
-  .micro-caption { font-size: var(--text-xs); color: var(--color-text-faint); line-height: 1.6; margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--color-border); }
+  .micro-arrow { position: absolute; right: calc(-1 * var(--space-3) - 3px); top: 50%; transform: translateY(-50%); color: var(--color-text-muted); font-size: var(--text-base); z-index: 1; }
+  .micro-caption { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.6; margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--color-border); }
   @media (max-width: 720px) {
     .micro-flow { flex-direction: column; gap: var(--space-5); }
     .micro-arrow { right: auto; left: var(--space-4); top: auto; bottom: calc(-1 * var(--space-5) + 2px); transform: rotate(90deg); }
